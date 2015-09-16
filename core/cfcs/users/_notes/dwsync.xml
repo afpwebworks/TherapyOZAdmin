@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="PermissionBean.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172154533" remote="130856735400000000" Dst="1" />
+<file name="PermissionCategoriesDAO.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172204536" remote="130856735400000000" Dst="1" />
+<file name="PermissionsDAO.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172454550" remote="130856735400000000" Dst="1" />
+<file name="SiteContact.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172464551" remote="130856735400000000" Dst="1" />
+<file name="SiteContactsDAO.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172504553" remote="130856735400000000" Dst="1" />
+<file name="User.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130856789207768914" remote="130856815800000000" Dst="1" />
+<file name="UserAccess.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130863208582180232" remote="130868596200000000" Dst="1" />
+<file name="UserAccesslevel.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172814571" remote="130856735400000000" Dst="1" />
+<file name="UserAccessLevelsDAO.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172764568" remote="130856735400000000" Dst="1" />
+<file name="UserGroup.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172864574" remote="130856735400000000" Dst="1" />
+<file name="UserGroupsDAO.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172904576" remote="130856735400000000" Dst="1" />
+<file name="UsersDAO.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130856765979615281" remote="130856767200000000" Dst="1" />
+<file name="UserService.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724172934578" remote="130856735400000000" Dst="1" />
+<file name="AccessManager.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130860879633477092" remote="130862556000000000" Dst="1" />
+</dwsync>

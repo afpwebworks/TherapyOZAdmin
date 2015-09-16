@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+======================================================================================
+Configuration file for Content Management System CMS 5.0
+Author:        Michael Kear, AFP Webworks 
+Client:        Therapy Oz Site Admin & CMS
+Date:          1/Aug/2015
+======================================================================================
+-->
+<settings>
+<!--
+======================================================================================
+   GLOBAL Variables 
+======================================================================================
+-->
+   <globals>
+	 <pageincrement>7</pageincrement>
+	 <AddNewContentAt>bottom</AddNewContentAt>
+	 <AddNewPageAt>top</AddNewPageAt>
+	 <minaccesslevelEdit>20</minaccesslevelEdit>
+	 <minaccesslevelApprove>90</minaccesslevelApprove>
+	 <hometimezone>Australia/Sydney</hometimezone>
+   </globals>
+<!--
+======================================================================================
+   PRODUCTION SITE Variables 
+======================================================================================
+-->
+   <production>
+	 <sitename>TherapyOzAdmin</sitename>
+	 <dsn>therapyoz</dsn>
+	 <bansdsn>HawkesburyRadioCMS</bansdsn>
+	    <mailserver>mail.therapyoz.com</mailserver>
+	 <mailuser>webmaster@therapyoz.com</mailuser>
+	 <mailpassword>468$^*fhgFHG</mailpassword>
+	 <sitemailindex>[TherapyOzAdmin]</sitemailindex>
+	 <webmasteremail>>webmaster@therapyoz.com</webmasteremail>
+	 <siteURL>http://admin.therapistsoz.com</siteURL>
+   </production>
+<!--
+======================================================================================
+   DEVELOPMENT SITE Variables 
+   <mailserver>mail.therapyoz.com</mailserver>
+	 <mailuser>webmaster@therapyoz.com</mailuser>
+	 <mailpassword>468$^*fhgFHG</mailpassword>
+	 
+	 	 <mailserver>mail.afpwebworks.com</mailserver>
+	 <mailuser>mgpk@afpwebworks.com</mailuser>
+	 <mailpassword>cr1$is45</mailpassword>
+	 
+	 
+======================================================================================
+-->
+   <development>
+	 <sitename>TherapyOzAdmin</sitename>
+	 <dsn>therapyoz</dsn>
+	 <bansdsn>HawkesburyRadioCMS</bansdsn>
+	 <mailserver>mail.afpwebworks.com</mailserver>
+	 <mailuser>mgpk@afpwebworks.com</mailuser>
+	 <mailpassword>cr1$is45</mailpassword>
+	 <sitemailindex>[DEV TherapyOzAdmin]</sitemailindex>
+	 <webmasteremail>mkear@afpwebworks.com</webmasteremail>
+	 <siteURL>http://dev.therapyadmin</siteURL>
+   </development>
+</settings>

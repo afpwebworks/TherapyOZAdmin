@@ -1,0 +1,33 @@
+/*
+// Custom styles for Admin site
+//  Client:   Therapy Oz  Admin Area
+//  Author:   Michael Kear,  AFP Webworks
+//  Date:     1/9/2015
+*/
+@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css";
+@import "//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css";
+@import "/css/animate.css";
+@import "/css/style.css"; 
+
+//custom fonts import
+@import "http://fonts.googleapis.com/css?family=Lato:300,400,700,900,400italic"; 
+.logo_title {
+	float: left;
+	/*margin: 2.1875rem 0;*/
+	margin: 1.1875rem 0;
+}
+.logo {
+	margin-right: 1em;
+	vertical-align: top;
+	width: 2.8125rem
+}
+h1.title {
+	display: inline;
+	font-size: 2.625rem;
+	font-weight: 900;
+	line-height: 2.8125rem
+}
+h1.title span {
+	font-weight: 300
+}
+

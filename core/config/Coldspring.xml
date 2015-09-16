@@ -1,0 +1,98 @@
+<beans>
+	<!--
+Coldspring Configuration file for Therapy oz.
+Author:  Mike Kear,  AFP Webworks
+Client:   Hawkesbury Radio BS
+          July 2015
+-->
+
+<!--
+=====================================================================
+ configuration/utilities CFCs  
+=====================================================================
+-->
+	<bean id="TimeZoneCFC" class="core.cfcs.utilities.TimeZone" lazy-init="true" />
+	<bean id="Pagination" class="core.cfcs.utilities.Pagination" lazy-init="true"/>
+	<bean id="ErrorHandler" class="core.cfcs.Utilities.ErrorHandler" singleton="false" lazy-init="true"/>
+	<bean id="UtilitiesLibrary" class="core.cfcs.utilities.UtilitiesLibrary" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+	</bean>
+	<bean id="FormProtect" class="core.cfcs.utilities.FormProtect" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+	</bean>
+	<bean id="configbean" class="core.config.configbean">
+		<constructor-arg name="argsConfigXMLname"><value>/core/config/config.xml</value></constructor-arg>
+		<constructor-arg name="TimeZoneCFC"><ref bean="TimeZoneCFC"/></constructor-arg>
+	</bean>
+	<bean id="Log" class="core.cfcs.utilities.Log" singleton="false" >
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+	</bean>
+	<!--
+=====================================================================
+Admin Menu management CFCs  
+=====================================================================
+-->	
+	<bean id="AdminMenu" class="core.cfcs.adminmenus.AdminMenu" singleton="False"/>
+	<bean id="AdminMenuDAO" class="core.cfcs.adminmenus.AdminMenuDAO">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService"/></property>
+	</bean>
+	<bean id="AdminAccessManager" class="core.cfcs.adminmenus.AdminAccessManager">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService"/></property>
+	</bean>
+	
+<!--
+=====================================================================
+Page and structure management CFCs  
+=====================================================================
+-->		
+	<bean id="TreeLibrary" class="core.cfcs.PageManagement.TreeLibrary">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService"/></property>
+	</bean>
+	<bean id="Page" class="core.cfcs.PageManagement.Page" singleton="False"/>
+<!--
+=====================================================================
+Users CFCs  
+=====================================================================
+-->	
+	
+	 <bean id="User" class="core.cfcs.Users.User" singleton="False"/>
+		<bean id="UsersDAO" class="core.cfcs.Users.UsersDAO" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService"/></property>
+	</bean>
+	<bean id="UserAccess" class="core.cfcs.Users.UserAccess" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
+	</bean>		
+	<bean id="UserService" class="core.cfcs.Users.UserService" lazy-init="true"/>
+	<bean id="PermissionBean" class="core.cfcs.Users.PermissionBean" singleton="False" lazy-init="true"/>
+	<bean id="PermissionsDAO" class="core.cfcs.Users.PermissionsDAO" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService"/></property>
+	</bean>	
+		<bean id="PermissionCategoriesDAO" class="cms.cfcs.Users.PermissionCategoriesDAO" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService" /></property>
+    </bean>
+	<bean id="UserAccessLevel" class="core.cfcs.Users.UserAccessLevel" singleton="False" lazy-init="true"/>
+	<bean id="UserAccessLevelsDAO" class="core.cfcs.users.UserAccessLevelsDAO" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService" /></property>
+     </bean>
+     <bean id="UserGroup" class="core.cfcs.Users.UserGroup" singleton="False" lazy-init="true"/>
+	<bean id="UserGroupsDAO" class="cms.cfcs.Users.UserGroupsDAO" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService"/></property>
+	</bean>	
+	<bean id="SiteContact" class="core.cfcs.Users.SiteContact" singleton="false"  lazy-init="true"/>
+	<bean id="SiteContactsDAO" class="core.cfcs.Users.SiteContactsDAO" lazy-init="true">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService" /></property>
+    </bean>
+	
+
+
+</beans>
