@@ -14,8 +14,9 @@ Revision history:
 
 
 <cfparam name="request.pagename" default="Delete Site">
+
 <cfif NOT(isdefined("url.SiteID")) AND NOT(isdefined("form.submit"))>
-  <cflocation addtoken="no" url="index.cfm" />
+  <cflocation addtoken="no" url="/index.cfm" />
   <cfelseif (isdefined("url.SiteID") and NOT(isDefined("form.submit")))>
   <cfscript>
  	Site =  application.beanfactory.getBean("Site");
@@ -37,11 +38,10 @@ Revision history:
   <cflocation addtoken="no" url="#cgi.HTTP_REFERER#" />
 </cfif>
 </cfsilent>
-<cfsetting enablecfoutputonly="yes">
-<cfinclude template="/includes/header.cfm">
 
+<cfinclude template="/includes/adminheader.cfm">
 <cfoutput>
-  <p>Delete this Site from the system. <strong>WARNING: This action removes the whole record from the database permanently.  Do you really want to remove this content element?</strong></p>
+  <p>Delete this Site from the system. <strong>WARNING: This action removes the whole site from the database permanently.    If can not be recovered.   It will delete all the content from the system.   Do you really want to remove this content element?</strong></p>
   <form action="#cgi.SCRIPT_NAME#?#cgi.Query_string#" method="post">
     <input type="hidden" name="SiteID" id="SiteID" value="#url.SiteID#">
     <div id="deletetable">
@@ -52,13 +52,12 @@ Revision history:
         </tr>
         <tr>
           <td align="right"><input type="submit" name="dontsubmit" class="submitbutton" value="No Dont delete"></td>
-          <td><input type="submit" name="submit" class="submitbutton"  value="OK Delete it"></td>
+          <td><input type="submit" name="submit" class="submitbutton warning"  value="Yes go ahead and delete it"></td>
         </tr>
       </table>
     </div>
   </form>
 </cfoutput>
-<cfsetting enablecfoutputonly="no">
-<cfinclude template="/includes/footer.cfm">
+<cfinclude template="/includes/adminfooter.cfm">
 
 

@@ -13,13 +13,13 @@ Revision history:
 --->
 
 <!----[  Initialise the form for adds:  ]----->
-<cfset Site = application.beanfactory.getBean("Site") />
-<cfset SitesDAO =   application.beanfactory.getBean("SitesDAO") />
+<cfscript>
+Site = application.beanfactory.getBean("Site");
+SitesDAO =   application.beanfactory.getBean("SitesDAO") ;
+Site.setSiteID( session.user.getSiteID() ) ;
 
-<cfif isdefined("url.SiteID")>
-   <cfset Site.setSiteID(SiteID) />
-   <cfset SitesDAO.read(Site) />
-</cfif>
+</cfscript>
+
 
 
 <!----[  Process the form if it is submitted:  ]----->
@@ -49,11 +49,10 @@ Revision history:
 </cfif>	
 </cfsilent>
 <cfinclude template="/Includes/adminheader.cfm" />
-
+ <cfset SitesDAO.read(Site) />
         
 <p>On this page you maintain the base settings of your site. </p>
-</div>
-  <cfdump var="#adminmenu.getsnapshot()#">
+
 
 <cfinclude template="/core/cf/business/sites/form_Site.cfm" />
 <cfinclude template="/Includes/adminfooter.cfm" />

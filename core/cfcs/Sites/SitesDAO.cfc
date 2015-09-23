@@ -77,7 +77,8 @@ null="#(NOT len( Site.getsiteid() ))#"
 		SiteID, Sitename, CustomerID, SiteTemplateID, Dateadded, Addedby, Dateupdated, Updatedby, Live, IsVisible, Version
 		FROM Sites 
 		WHERE 
-		IsVisible = '1' ANDSiteID = <cfqueryparam value="#Site.getSiteID()#"  cfsqltype="CF_SQL_INTEGER"/>
+		IsVisible = '1' AND
+        SiteID = <cfqueryparam value="#Site.getSiteID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery>
 	<cfif QSitesselect.recordCount >
 		<cfscript>
