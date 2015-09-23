@@ -52,6 +52,12 @@ Page and structure management CFCs
 		<property name="UserService"><ref bean="UserService"/></property>
 	</bean>
 	<bean id="Page" class="core.cfcs.PageManagement.Page" singleton="False"/>
+	<bean id="SiteTemplate" class="core.cfcs.templates.SiteTemplate" singleton="false" />
+	<bean id="SiteTemplatesDAO" class="core.cfcs.templates.SiteTemplatesDAO">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService" /></property>
+</bean>
+	
 <!--
 =====================================================================
 Business CFCs  
