@@ -11,8 +11,10 @@ Revision history:
 ==========================================================================================================
 --->
 </cfsilent>
+<!----[  Close wrapper  ]----MK ---->
+</div>
        <cfoutput>
-        <div class="footer">
+ <!----[         <div class="footer">
             <div class="pull-right">
                 Websites optimised for therapists
             </div>
@@ -23,7 +25,7 @@ Revision history:
         </div>
 
     </div>
-</div>
+</div>  ]----MK ---->
 </cfoutput>
 
 <!-- Mainly scripts -->
