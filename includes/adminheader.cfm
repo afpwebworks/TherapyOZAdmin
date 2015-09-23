@@ -41,18 +41,6 @@ request.pagename = adminmenu.getDescription();
 	<link rel="apple-touch-icon-precomposed" href="/css/ico/apple-touch-icon-57-precomposed.png">
 	<link rel="shortcut icon" href="/css/ico/favicon.png">
 
-
-<!----[      <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,400italic' rel='stylesheet' type='text/css'>  ]----MK ---->
-<!-- Latest compiled and minified CSS -->
-  
-
-    <!----[  <link href="font-awesome/css/font-awesome.css" rel="stylesheet">  ]----MK ---->
-
- <!----[     <link 
-    ="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">  ]----MK ---->
     <link rel="stylesheet" type="text/css" href="/css/TherapyozCustom.css">
 </head>
 
