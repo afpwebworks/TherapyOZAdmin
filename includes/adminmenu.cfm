@@ -20,7 +20,7 @@ Revision history:
                     <div class="dropdown profile-element">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="##">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">#session.user.getUserFirstname()# #session.user.getUserLastName()#</strong>
-                             </span> <span class="text-muted text-xs block">Last login: #timeformat(session.user.getUserLastLogin(), 'hh:mmtt')# #dateformat(session.user.getUserLastLogin(), 'dd/mmm/yyyy')# <b class="caret"></b></span> </span> </a>
+                             </span> <span class="text-muted text-xs block">Last login: #dateformat(session.user.getUserLastLogin(), 'dd/mmm/yyyy')# <b class="caret"></b></span> </span> </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a href="/logout.cfm">Logout</a></li>
                             </ul>
