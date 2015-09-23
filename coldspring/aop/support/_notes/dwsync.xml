@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<dwsync>
-<file name="AbstractPointcutAdvisor.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724170674449" remote="130856734200000000" Dst="1" />
-<file name="DefaultPointcutAdvisor.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724170674449" remote="130856734200000000" Dst="1" />
-<file name="NamedMethodPointcut.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724170944464" remote="130856734200000000" Dst="1" />
-<file name="NamedMethodPointcutAdvisor.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724170974466" remote="130856734200000000" Dst="1" />
-<file name="RegexMethodPointcut.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724170994467" remote="130856734200000000" Dst="1" />
-<file name="RegexMethodPointcutAdvisor.cfc" server="ftp.therapistsoz.com/wwwroot/" local="130825724171004467" remote="130856734200000000" Dst="1" />
-</dwsync>
