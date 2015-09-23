@@ -35,6 +35,7 @@ Bean Template:
 	Postcode string 
 	Country String Australia
 	SiteID numeric 0
+	CustomerID numeric 0
 	DateAdded any #now()#
 	AddedBy string 
 	DateUpdated any #now()#
@@ -79,6 +80,7 @@ Date Format: DD/MM/YYYY
 		<cfargument name="Postcode" type="string" required="false" default="" />
 		<cfargument name="Country" type="String" required="false" default="Australia" />
 		<cfargument name="SiteID" type="numeric" required="false" default="0" />
+		<cfargument name="CustomerID" type="numeric" required="false" default="0" />
 		<cfargument name="DateAdded" type="any" required="false" default="#now()#" />
 		<cfargument name="AddedBy" type="string" required="false" default="" />
 		<cfargument name="DateUpdated" type="any" required="false" default="#now()#" />
@@ -110,6 +112,7 @@ Date Format: DD/MM/YYYY
 			setPostcode(arguments.Postcode);
 			setCountry(arguments.Country);
 			setSiteID(arguments.SiteID);
+			setCustomerID(arguments.CustomerID);
 			setDateAdded(arguments.DateAdded);
 			setAddedBy(arguments.AddedBy);
 			setDateUpdated(arguments.DateUpdated);
@@ -213,6 +216,10 @@ Date Format: DD/MM/YYYY
 			<!----[ SiteID ]---->
 			<cfif ( getSiteID() eq whatever )>
 				<cfset arguments.eH.setError("SiteID", "SiteID This is the error message") />
+			</cfif>
+			<!----[ CustomerID ]---->
+			<cfif ( getCustomerID() eq whatever )>
+				<cfset arguments.eH.setError("CustomerID", "CustomerID This is the error message") />
 			</cfif>
 			<!----[ DateAdded ]---->
 			<cfif ( getDateAdded() eq whatever )>
@@ -417,6 +424,14 @@ Date Format: DD/MM/YYYY
 	</cffunction>
 	<cffunction name="getSiteID" access="public" returntype="numeric" output="false">
 		<cfreturn variables.instance.SiteID />
+	</cffunction>
+
+	<cffunction name="setCustomerID" access="public" returntype="void" output="false">
+		<cfargument name="CustomerID" type="numeric" required="true" />
+		<cfset variables.instance.CustomerID = arguments.CustomerID />
+	</cffunction>
+	<cffunction name="getCustomerID" access="public" returntype="numeric" output="false">
+		<cfreturn variables.instance.CustomerID />
 	</cffunction>
 
 	<cffunction name="setDateAdded" access="public" returntype="void" output="false">
