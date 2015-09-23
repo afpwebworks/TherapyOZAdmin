@@ -62,6 +62,11 @@ Business CFCs
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
 		<property name="UserService"><ref bean="UserService" /></property>
 	</bean>
+	<bean id="Customer" class="core.cfcs.sites.Customer" singleton="false" />
+	<bean id="CustomersDAO" class="core.cfcs.sites..CustomersDAO">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService" /></property>
+	</bean>
 
 <!--
 =====================================================================
