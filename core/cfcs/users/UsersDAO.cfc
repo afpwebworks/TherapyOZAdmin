@@ -122,6 +122,7 @@ Revision history:
          User.setDateUpdated(QUsersselect.DateUpdated);
          User.setUpdatedBy(QUsersselect.UpdatedBy);
 		 User.setCustomerID(QUsersselect.CustomerID);
+		 User.setSiteID( QUsersselect.SiteID );
 		</cfscript>
         <cfset ReadPermissions(user) />
         <cfset ReadUserGroups(user) />  
