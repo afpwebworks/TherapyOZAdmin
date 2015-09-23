@@ -13,9 +13,7 @@ Revision history:
 --->
 <cfscript>
 adminmenuDAO =  application.beanfactory.getbean("adminmenuDAO");
-AdminAccessManager =  application.beanfactory.getbean("AdminAccessManager");
 adminmenubc = application.beanfactory.getbean("adminmenu");
-
 adminmenubc.setURL( cgi.SCRIPT_NAME );
 adminmenuDAO.readMenufromCGI( adminmenubc  );
 qbreadcrumb = AdminAccessManager.getAdminBreadcrumb( adminmenubc );
@@ -29,7 +27,7 @@ qbreadcrumb = AdminAccessManager.getAdminBreadcrumb( adminmenubc );
         <cfloop query="qbreadcrumb">
             <li><a href="#qbreadcrumb.url#">#qbreadcrumb.description#</a></li>
          </cfloop>   
-            <li class="active"><a href="#adminmenu.geturl()#">#adminmenu.getDescription()#</a></li>
+            <li class="active"><a href="#adminmenubc.geturl()#">#adminmenubc.getDescription()#</a></li>
        </cfif>     
     </ol>
 </cfoutput>
