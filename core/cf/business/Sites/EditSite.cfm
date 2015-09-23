@@ -24,6 +24,7 @@ Site.setSiteID( session.user.getSiteID() ) ;
 
 <!----[  Process the form if it is submitted:  ]----->
 <cfif isdefined("form.submit")>
+
 	<cfset errorhandler = application.beanfactory.getBean("ErrorHandler") />
    <cfscript>
      //transfer form values to the bean
@@ -43,7 +44,7 @@ Site.setSiteID( session.user.getSiteID() ) ;
    <cfset Site.validate(errorhandler) />   
 	<cfif NOT(errorhandler.haserrors())>
 		<cfset SitesDAO.save(Site) />
-		<cflocation addtoken="no"  url="/core/cf/business/admin/index.cfm" />
+		<cflocation addtoken="no"  url="/core/cf/business/index.cfm" />
 		<cfabort> 
 	</cfif>
 </cfif>	

@@ -41,7 +41,7 @@ SiteTemplates = application.beanfactory.getbean("SiteTemplatesDAO").GetAllSiteTe
     <input type="hidden" name="Live"  value="#Site.getLive()#" >
     <div class="form-group">
       <label for="Sitename" >Sitename</label>
-      <input type="text" class="form-control" id="Sitename" placeholder="Sitename"  maxlength="512"  value="#Site.getSitename()#" >
+      <input type="text" class="form-control" id="Sitename" name="Sitename" placeholder="Sitename"  maxlength="512"  value="#Site.getSitename()#" >
     </div>
     <div class="form-group">
     <label for="SiteTemplateID">Site&nbsp;Template </label>
