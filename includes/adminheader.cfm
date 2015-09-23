@@ -14,6 +14,7 @@ Revision history:
 <!----[  Collect the data for the page  ]----MK ---->
 <cfscript>
 adminmenudAO = application.beanfactory.getbean("adminmenudAO");
+util =  application.beanfactory.getbean("utilitieslibrary");
 AdminAccessManager =  application.beanfactory.getbean("AdminAccessManager");
 adminmenu =application.beanfactory.getbean("adminmenu");
 adminmenu.setURL( cgi.SCRIPT_NAME );

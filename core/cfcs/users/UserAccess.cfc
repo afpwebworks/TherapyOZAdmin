@@ -94,7 +94,7 @@ Modification:   30/4/2006  Changed to provide only the access/login control item
 			application.beanfactory.getbean("UsersDAO").read(vUser);
 			vUser.setIsloggedIn(true);
 			</cfscript>	
-			<cfreturn vUser>
+            <cfreturn vUser>
 		<!----[  OTherwise it's not a valid user, so just hand back the empty userbean ]---->	
 		<cfelse>
 		<cfreturn vUser />
@@ -161,8 +161,8 @@ Modification:   30/4/2006  Changed to provide only the access/login control item
 		
 		WHERE UserID      = <cfqueryparam value="#user.getUserID()#" />
     </cfquery> 
-   
-	<cfreturn arguments.argsuser>
+         <cfset application.beanfactory.getbean("UsersDAO").read( user ) />
+	<cfreturn user>
 </cffunction>
 
 <cffunction name="LogoutUser" access="public" output="false" returntype="user" hint="Logs the user out and resets all session vars to the defaults">
