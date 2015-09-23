@@ -86,11 +86,12 @@ Revision history:
 	<cfset var QUsersselect = "" />
 	<cfquery name="QUsersselect" datasource="#variables.dsn#">
 		SELECT 
-		UserID, UserLogin, UserPassword, UserAccessLevel, UserFirstname, UserLastName, Email, UserIp, UserLastLogin, UserTotalLogins, UserActive, IsVisible, Phone, Mobile, Title, Address1, Address2, City, State, Postcode, Country, DateAdded, AddedBy, DateUpdated, UpdatedBy
-		FROM Users 
+		u.UserID, u.UserLogin, u.UserPassword, u.UserAccessLevel, u.UserFirstname, u.UserLastName, u.Email, u.UserIp, u.UserLastLogin, u.UserTotalLogins, u.UserActive, u.IsVisible, u.Phone, u.Mobile, u.Title, u.Address1, u.Address2, u.City, u.State, u.Postcode, u.Country, u.DateAdded, u.AddedBy, u.DateUpdated, u.UpdatedBy, u.customerid, s.siteid
+		FROM Users u, sites s
 		WHERE 
-		IsVisible = '1' AND
-		UserID = <cfqueryparam value="#User.getUserID()#" cfsqltype="cf_sql_varchar"/>
+        u.customerid  = s.customerid AND 
+		u.IsVisible = <cfqueryparam value="1" cfsqltype="cf_sql_bit" /> AND
+		u.UserID = <cfqueryparam value="#User.getUserID()#" cfsqltype="cf_sql_varchar"/>
 	</cfquery>
 	<cfif QUsersselect.recordCount >
 		<cfscript>
@@ -120,6 +121,7 @@ Revision history:
          User.setAddedBy(QUsersselect.AddedBy);
          User.setDateUpdated(QUsersselect.DateUpdated);
          User.setUpdatedBy(QUsersselect.UpdatedBy);
+		 User.setCustomerID(QUsersselect.CustomerID);
 		</cfscript>
         <cfset ReadPermissions(user) />
         <cfset ReadUserGroups(user) />  
@@ -133,7 +135,7 @@ Revision history:
 <cffunction name="GetAllUsers" access="public" output="false" returntype="query" hint="Returns a query of all Users in our Database">
 <cfset var QgetallUsers = 0 />
 	<cfquery name="QgetallUsers" datasource="#variables.dsn#">
-		SELECT UserID, UserLogin, UserPassword, UserAccessLevel, UserFirstname, UserLastName, Email, UserIp, UserLastLogin, UserTotalLogins, UserActive, IsVisible, Phone, Mobile, Title, Address1, Address2, City, State, Postcode, Country, DateAdded, AddedBy, DateUpdated, UpdatedBy, 
+		SELECT UserID, UserLogin, UserPassword, UserAccessLevel, UserFirstname, UserLastName, Email, UserIp, UserLastLogin, UserTotalLogins, UserActive, IsVisible, Phone, Mobile, Title, Address1, Address2, City, State, Postcode, Country, DateAdded, AddedBy, DateUpdated, UpdatedBy, customerid 
 		Userfirstname + ' ' + Userlastname as UserName
 		FROM Users		
 		WHERE IsVisible = '1'
@@ -220,7 +222,7 @@ Revision history:
 	<cfquery name="qUserInsert" datasource="#variables.dsn#" >
 		SET NOCOUNT ON
 		INSERT into Users
-		( UserLogin, UserPassword, UserAccessLevel, UserFirstname, UserLastName, Email, UserIp, UserLastLogin, UserTotalLogins, UserActive, IsVisible, Phone, Mobile, Title, Address1, Address2, City, State, Postcode, Country, DateAdded, AddedBy, DateUpdated, UpdatedBy ) VALUES
+		( UserLogin, UserPassword, UserAccessLevel, UserFirstname, UserLastName, Email, UserIp, UserLastLogin, UserTotalLogins, UserActive, IsVisible, Phone, Mobile, Title, Address1, Address2, City, State, Postcode, Country, DateAdded, AddedBy, DateUpdated, UpdatedBy, customerid ) VALUES
 		(
 		<cfqueryparam value="#User.getuserlogin()#" cfsqltype="CF_SQL_VARCHAR" />,
 		<cfqueryparam value="#User.getuserpassword()#" cfsqltype="CF_SQL_VARCHAR" />,
@@ -245,7 +247,8 @@ Revision history:
 		<cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_TIMESTAMP" />,
 		<cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/> ,
 		<cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_TIMESTAMP" />,
-		<cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/> 
+		<cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/>,
+        <cfqueryparam value="#User.getCustomerid()#" cfsqltype="CF_SQL_INTEGER" /> 
 		   ) 
 		SELECT Ident_Current('Users') as UserID
 		SET NOCOUNT OFF
@@ -289,7 +292,8 @@ Revision history:
         postcode  = <cfqueryparam value="#User.getPostcode()#" cfsqltype="CF_SQL_VARCHAR"/>,
         country  = <cfqueryparam value="#User.getCountry()#" cfsqltype="CF_SQL_VARCHAR"/>,
         dateupdated  = <cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_TIMESTAMP" />,
-        updatedby  = <cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/>
+        updatedby  = <cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/>,
+        customerid = <cfqueryparam value="#User.getCustomerid()#" cfsqltype="CF_SQL_INTEGER" /> 
 						
 		WHERE 
 		UserID = <cfqueryparam value="#User.getUserID()#" />
