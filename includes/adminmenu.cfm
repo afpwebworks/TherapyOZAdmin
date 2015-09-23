@@ -10,14 +10,7 @@ Revision history:
 
 ==========================================================================================================
 --->
-<cfset adminmenudAO = application.beanfactory.getbean("adminmenudAO") />
-<cfset tempmenu =application.beanfactory.getbean("adminmenu") />
-<cfset tempmenu.setURL( cgi.SCRIPT_NAME ) />
-<cfset tempmenu = adminmenudao.readMenufromCGI( tempmenu ) />
-<cfset submenu = adminmenudAO.getChildren( tempmenu ) />
-<cfif submenu.recordcount eq 0 >
-  <cfset submenu = adminmenudAO.getSiblings( tempmenu ) />
-</cfif>
+
 </cfsilent>
 <cfoutput>
 <nav class="navbar-default navbar-static-side" role="navigation">

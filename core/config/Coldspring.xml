@@ -54,9 +54,21 @@ Page and structure management CFCs
 	<bean id="Page" class="core.cfcs.PageManagement.Page" singleton="False"/>
 <!--
 =====================================================================
+Business CFCs  
+=====================================================================
+-->	
+	<bean id="Site" class="core.cfcs.sites.Site" singleton="false" />
+	<bean id="SitesDAO" class="core.cfcs.sites.SitesDAO">
+		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService" /></property>
+	</bean>
+
+<!--
+=====================================================================
 Users CFCs  
 =====================================================================
 -->	
+
 	
 	 <bean id="User" class="core.cfcs.Users.User" singleton="False"/>
 		<bean id="UsersDAO" class="core.cfcs.Users.UsersDAO" lazy-init="true">

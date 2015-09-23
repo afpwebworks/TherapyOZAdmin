@@ -10,11 +10,22 @@ Revision history:
 
 ==========================================================================================================
 --->
-<cfscript>
-
-</cfscript>
 <cfparam name="request.pagename" default="">
+<!----[  Collect the data for the page  ]----MK ---->
+<cfscript>
+adminmenudAO = application.beanfactory.getbean("adminmenudAO");
+AdminAccessManager =  application.beanfactory.getbean("AdminAccessManager");
+adminmenu =application.beanfactory.getbean("adminmenu");
+adminmenu.setURL( cgi.SCRIPT_NAME );
+adminmenu = adminmenudao.readMenufromCGI( adminmenu );
+submenu = adminmenudAO.getChildren( adminmenu );
+if (submenu.recordcount eq 0 )
+  submenu = adminmenudAO.getSiblings( adminmenu ) ;
+request.pagename = adminmenu.getDescription();
+</cfscript>
+
 </cfsilent>
+<!----[  Set up HTML headers  ]----MK ---->
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,3 +57,8 @@ Revision history:
 </head>
 
 <body>
+<div id="wrapper">
+<!----[  Include main side menu  ]----MK ---->
+<cfinclude template="/includes/adminmenu.cfm" />
+<!----[  Include top page  header  ]----MK ---->
+<cfinclude template="/includes/adminheaderbar.cfm" />

@@ -195,7 +195,7 @@ Miscellaneous global methods
 ============================================================================================================
  ]---->	
 <cffunction name="isLoggedIn" access="public">
-		<cfreturn session.userbean.getIsloggedin() neq "No" />
+		<cfreturn session.user.getIsloggedin() neq "false" />
 </cffunction> 
 
 </cfsilent>

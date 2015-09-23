@@ -14,7 +14,7 @@ Revision history:
        <cfoutput>
         <div class="footer">
             <div class="pull-right">
-                10GB of <strong>250GB</strong> Free.
+                Websites optimised for therapists
             </div>
             <div>
                 <strong>Copyright</strong> Therapy In Oz &copy; #datepart("yyyy", now() )#
