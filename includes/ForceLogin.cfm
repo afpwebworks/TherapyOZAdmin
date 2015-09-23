@@ -32,19 +32,21 @@ Revision history:
 		rPassword = #Replace(form.Password, " ", "")#;
 		session.user = UserAccess.loginUser( rUserName, rPassword, session.user );
 	</cfscript>
+    		
 		<cfif session.user.getIsloggedin()>
 		<!--- If the user is populated with data, consider the user 'logged in' and update the count and stats --->
 			<cfscript>
-				UserAccess.UpdateAfterLogin(cgi, session.user);
-				application.beanfactory.getbean("UsersDAO").read( session.user );
+				session.user = UserAccess.UpdateAfterLogin(cgi, session.user);
 			</cfscript>
-			<cflocation addtoken="no" url="/index.cfm" />
+            
+				<cflocation addtoken="no" url="/index.cfm" /> 
 			<!--- Othewise re-prompt for a valid username and password --->	
 		<cfelse>
 			<cflock scope="session" type="exclusive" timeout="10">
 				<cfset session.loginerrormessage = "<li>Sorry that username and password are not recognised.  Please try again.</li>">
 			</cflock>
 		</cfif>
+        
 </cfif>
 	<cfinclude template="/includes/LoginForm.cfm">
 	<cfabort>
