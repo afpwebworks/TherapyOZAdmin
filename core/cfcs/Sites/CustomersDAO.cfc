@@ -118,6 +118,22 @@ null="#(NOT len( Customer.getcustomerid() ))#"
 	<cfreturn QgetallCustomers />
 </cffunction>
 
+<cffunction name="getCustomerName" access="public" output="no" returntype="string" hint="Returns the customer name as a string.  REquires a valid customerID">
+	<cfargument name="argsCustomerID" type="numeric" required="yes" hint="The customerID to search the name" />
+    <cfset var CustomerID = arguments.argsCustomerID />
+    <cfset var qCustomername = "" />
+    <cfquery name="qCustomername" datasource="#variables.dsn#">
+    	SELECT Customername from Customers
+        WHERE Customerid = <cfqueryparam value="#customerID#" cfsqltype="cf_sql_integer" />
+    </cfquery>
+    
+    <cfif qCustomername.recordcount>
+    	<cfset returnvalue = qCustomername.Customername />
+    <cfelse>
+    	<cfset returnvalue = "Not Known" />
+    </cfif>
+    <cfreturn returnvalue />    
+</cffunction>
 
 <!-----[  Private 'helper' methods called by other methods only.  ]----->
 
