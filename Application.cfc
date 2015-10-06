@@ -109,10 +109,22 @@ Request start and end
     
 				<!--- RENEW APPLICATION VARIABLES --->
         <cfif structKeyExists(URL, "reset") AND URL.reset IS "yes">
+        		<!----[  Log the restart of application.  ]----MK ---->
+               <cfscript>
+					LogEntry = application.beanfactory.getbean("Log");
+					LogEntry.setSiteID( session.user.getSiteID() );
+					LogEntry.setUserID( session.User.getUserID()  );
+					LogEntry.setTableName("");
+					LogEntry.setActivity("Site Reset");
+					LogEntry.setComment(" Application reset");
+					application.beanfactory.getbean("LogsDAO").Save( LogEntry ) ;
+				</cfscript>
         	   <cfset applicationstop() />
                <cfset this.onApplicationStart() />
                <!----[  <cfset this.onSessionEnd() />  ]----MK ---->
 			   <cfset this.onSessionStart() /> 
+               
+                
         </cfif>
         
        <!----[   Check for login status and force login if required.  ]----MK ---->

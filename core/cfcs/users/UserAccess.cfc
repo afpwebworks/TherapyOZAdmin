@@ -26,7 +26,7 @@ Modification:   30/4/2006  Changed to provide only the access/login control item
 	<cfset variables.sitemailindex = variables.config.getsitemailindex() />	
 	<cfset variables.austime = variables.config.getAusTime() />
     <cfset variables.Log = arguments.argsLog/>
-	<cfreturn this />
+   	<cfreturn this />
 </cffunction>
 
 <cffunction name="setUserService" access="public" output="false" returntype="void" hint="Dependency: User Service">
@@ -34,7 +34,17 @@ Modification:   30/4/2006  Changed to provide only the access/login control item
 	<cfset variables.UserService = arguments.UserService/>
 </cffunction>
 
+<cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
 
+    <cfscript>
+	 var Log = 	variables.Log;
+	 log.setSiteID(  variables.userservice.getUSer().getSiteID() );
+	 Log.setUserID(  variables.userservice.getUser().getUserID() );
+	 
+	</cfscript>
+	<cfset variables.Log = Log/>
+    <cfreturn variables.log />
+</cffunction>
 
 
 <cffunction name="GetUser" access="public" returntype="string" output="false" hint="Returns the basic infor for CFLOGIN tag.">
@@ -93,7 +103,18 @@ Modification:   30/4/2006  Changed to provide only the access/login control item
 			vUser.setUserID(qLoginUser.UserID);
 			application.beanfactory.getbean("UsersDAO").read(vUser);
 			vUser.setIsloggedIn(true);
-			</cfscript>	
+			</cfscript>
+            	
+              <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+			    InitLog( variables.Log);
+               	variables.log.setTablename( "Users");
+				variables.log.setComment( "User logged in");
+				variables.log.setActivity( "Login" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+                
             <cfreturn vUser>
 		<!----[  OTherwise it's not a valid user, so just hand back the empty userbean ]---->	
 		<cfelse>
@@ -172,6 +193,16 @@ Modification:   30/4/2006  Changed to provide only the access/login control item
 	<!----Kill the cookies and CFID/CFTOKEN ---->
 	  <cfcookie name="CFID"  expires="NOW">
 	  <cfcookie name="CFTOKEN" expires="NOW">
+      
+       <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+			    InitLog( variables.Log);
+               	variables.log.setTablename( "Users");
+				variables.log.setComment( "User logged out");
+				variables.log.setActivity( "Login" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 
 		<!---- Delete the session vars. ---->
 	    <cfscript>
@@ -233,6 +264,15 @@ Yours faithfully,
 Webmaster,
 #variables.sitename#		 	 
 </cfmail>  
+		 <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Users");
+				variables.log.setComment( "Password requested - sent by email");
+				variables.log.setActivity( "Lost Password" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 </cffunction>
 	
 	<cffunction name="getpassword" access="public" output="true" returntype="string" hint="Retrieves password for a given email address to be sent to the user.  Requires either UserEmail, UserLogin or User's first name and last name">

@@ -15,10 +15,12 @@ Revision history:
 <!--- Constructor / initialisation --->
 <cffunction name="init" access="Public" returntype="UsersDAO" output="false" hint="Initialises the controller">
 <cfargument name="argsConfiguration" required="true" type="any" />
+<cfargument name="argsLog" required="true" type="any" />
 	<cfset var config  = arguments.argsConfiguration />
 	<cfset variables.config = arguments.argsConfiguration />
 	<cfset variables.dsn = config.getDSN() />
 	<cfset variables.austime = config.getAusTime() />
+    <cfset variables.Log = arguments.argsLog/>
 	<cfreturn this />
 </cffunction>
 
@@ -26,6 +28,21 @@ Revision history:
 	<cfargument name="UserService" type="any" required="true"/>
 	<cfset variables.UserService = arguments.UserService/>
 </cffunction>
+
+
+<cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
+
+    <cfscript>
+	 var Log = 	variables.Log;
+	 log.setSiteID(  variables.userservice.getUSer().getSiteID() );
+	 Log.setUserID(  variables.userservice.getUser().getUserID() );
+	 
+	</cfscript>
+	<cfset variables.Log = Log/>
+    <cfreturn variables.log />
+</cffunction>
+
+
 
 
 	<cffunction name="GetSiteContacts" access="public" returntype="query" output="false" hint="Returns a query of teh site's contacts, and email addresses for use throughout the site's contact us forms "> 
@@ -63,6 +80,15 @@ Revision history:
 		WHERE 
 		UserID = <cfqueryparam value="#User.getUserID()#" cfsqltype="cf_sql_varchar"/>
 	</cfquery>	
+     <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Users");
+				variables.log.setComment( "Deleted a user");
+				variables.log.setActivity( "Delete" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 </cffunction>
 
 
@@ -76,6 +102,15 @@ Revision history:
 		WHERE 
 		UserID = <cfqueryparam value="#User.getUserID()#" cfsqltype="cf_sql_varchar"/>
 	</cfquery>	
+     <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Users");
+				variables.log.setComment( "Undeleted a user");
+				variables.log.setActivity( "Undelete" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 </cffunction>
 
 
@@ -261,6 +296,16 @@ Revision history:
 	<cfset UpdatePermissions( user ) />
 	<cfset UpdateUserGroups ( user ) />
     <cfset UpdateAdminMenus ( user ) />		
+    
+     <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Users");
+				variables.log.setComment( "Created user #user.getUserfirstname()# #user.getUserLastName()#");
+				variables.log.setActivity( "Create" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 
 	<cfreturn User />
 </cffunction>
@@ -304,6 +349,17 @@ Revision history:
 	<cfset UpdatePermissions( user ) />
 	<cfset UpdateUserGroups ( user ) />
     <cfset UpdateAdminMenus ( user ) />
+    
+    <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                InitLog( variables.Log);
+               	variables.log.setTablename( "Users");
+				variables.log.setComment( "Updated user #user.getUserfirstname()# #user.getUserLastName()#");
+				variables.log.setActivity( "Update" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+               
 
 	<cfreturn User />
 </cffunction>
@@ -343,6 +399,7 @@ Revision history:
 			)
 		</cfquery>
 	</cfloop>
+                   
 <cfreturn user />
 </cffunction>
 
@@ -423,6 +480,7 @@ Revision history:
 			)
 		</cfquery>
 	</cfloop>
+                  
 <cfreturn user />
 </cffunction>
 

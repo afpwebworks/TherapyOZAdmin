@@ -24,8 +24,10 @@ Client:   Hawkesbury Radio BS
 		<constructor-arg name="argsConfigXMLname"><value>/core/config/config.xml</value></constructor-arg>
 		<constructor-arg name="TimeZoneCFC"><ref bean="TimeZoneCFC"/></constructor-arg>
 	</bean>
-	<bean id="Log" class="core.cfcs.utilities.Log" singleton="false" >
+	<bean id="Log" class="core.cfcs.utilities.Log" singleton="false" ></bean>
+	<bean id="LogsDAO" class="core.cfcs.utilities.LogsDAO">
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService" /></property>
 	</bean>
 	<!--
 =====================================================================
@@ -53,10 +55,11 @@ Page and structure management CFCs
 	</bean>
 	<bean id="Page" class="core.cfcs.PageManagement.Page" singleton="False"/>
 	<bean id="SiteTemplate" class="core.cfcs.templates.SiteTemplate" singleton="false" />
-	<bean id="SiteTemplatesDAO" class="core.cfcs.templates.SiteTemplatesDAO">
-		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
-		<property name="UserService"><ref bean="UserService" /></property>
-</bean>
+	<bean id="SiteTemplatesDAO" class="core.cfcs.[foldername].SiteTemplatesDAO">
+        <constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+        <constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
+        <property name="UserService"><ref bean="UserService" /></property>
+	</bean>
 	
 <!--
 =====================================================================
@@ -66,11 +69,13 @@ Business CFCs
 	<bean id="Site" class="core.cfcs.sites.Site" singleton="false" />
 	<bean id="SitesDAO" class="core.cfcs.sites.SitesDAO">
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
 		<property name="UserService"><ref bean="UserService" /></property>
 	</bean>
 	<bean id="Customer" class="core.cfcs.sites.Customer" singleton="false" />
 	<bean id="CustomersDAO" class="core.cfcs.sites..CustomersDAO">
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
 		<property name="UserService"><ref bean="UserService" /></property>
 	</bean>
 
@@ -84,11 +89,13 @@ Users CFCs
 	 <bean id="User" class="core.cfcs.Users.User" singleton="False"/>
 		<bean id="UsersDAO" class="core.cfcs.Users.UsersDAO" lazy-init="true">
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+		<constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
 		<property name="UserService"><ref bean="UserService"/></property>
 	</bean>
 	<bean id="UserAccess" class="core.cfcs.Users.UserAccess" lazy-init="true">
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
 		<constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
+		<property name="UserService"><ref bean="UserService"/></property>
 	</bean>		
 	<bean id="UserService" class="core.cfcs.Users.UserService" lazy-init="true"/>
 	<bean id="PermissionBean" class="core.cfcs.Users.PermissionBean" singleton="False" lazy-init="true"/>

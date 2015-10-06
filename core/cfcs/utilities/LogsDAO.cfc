@@ -17,7 +17,7 @@ null="#(NOT len( Log.getlogid() ))#"
 </cfsilent>
 <!--- Constructor / initialisation --->
 <cffunction name="init" access="Public" returntype="LogsDAO" output="false" hint="Initialises the controller">
-<cfargument name="argsConfiguration" required="true" type="configbean" />
+<cfargument name="argsConfiguration" required="true" type="any" />
 	<cfset variables.config  = arguments.argsConfiguration />
 	<cfset variables.dsn = variables.config.getDSN() />
 	<cfset variables.austime = variables.config.getAusTime() />
@@ -108,6 +108,38 @@ null="#(NOT len( Log.getlogid() ))#"
 </cffunction>
 
 
+<!----[  Get logs related to user  ]----MK ---->
+<cffunction name="GetMyLogs" access="public" returntype="query" output="no" hint="Provides a query of the log entries related ot the user's site.  If 'seen' is specified, will only return records with seen=1 as well ">
+	<cfargument name="argsUser" required="yes" type="any" />
+	<cfargument name="argsUnseen" default="false" type="boolean" />
+    <cfscript>
+		var thisuser = arguments.argsUser ;
+        var UserID = thisuser.getUseriD() ;
+		var unseen = arguments.argsUnseen ;
+		var qLogEntries = 0 ;
+	</cfscript>
+    
+    <cfquery name="qLogEntries" datasource="#variables.dsn#">
+    	SELECT l.siteid, l.userid, l.tablename, l.activity, l.comment, l.dateadded, l.isvisible, l.seen, u.userfirstname + ' ' + u.userlastname as Username, s.sitename
+        FROM Log l, users u, sites s 
+         WHERE l.IsVisible = <cfqueryparam value="1" cfsqltype="cf_sql_bit" /> 
+        AND l.Userid = u.Userid
+        AND s.siteid = l.siteid
+         AND l.userid = <cfqueryparam value="#thisuser.getUseriD()#" cfsqltype="cf_sql_integer" />
+		 <cfif variables.userservice.getuser().getUserAccessLevel() LT '99'>
+        	AND l.siteID = <cfqueryparam value="#variables.userservice.getuser().getSiteID()#" cfsqltype="cf_sql_integer" />
+         </cfif>
+           
+         <cfif unseen is false >
+          AND l.seen = <cfqueryparam value="0" cfsqltype="cf_sql_bit" />
+         </cfif>		 
+         Order by dateadded, userid 
+    </cfquery>
+    
+    <cfreturn qLogEntries />
+    
+</cffunction>
+
 <!-----[  Private 'helper' methods called by other methods only.  ]----->
 
 <cffunction name="create"  access="private" returntype="Log" output="false" hint="DAO method">
@@ -118,7 +150,7 @@ null="#(NOT len( Log.getlogid() ))#"
 	<cfquery name="qLogInsert" datasource="#variables.dsn#" >
 		SET NOCOUNT ON
 		INSERT into Log
-		( SiteID, UserID, TableName, Activity, Comment, DateAdded, IsVisible ) VALUES
+		( SiteID, UserID, TableName, Activity, Comment, IsVisible , seen ) VALUES
 		(
 
 		<cfqueryparam value="#Log.getsiteid()#" cfsqltype="CF_SQL_INTEGER" />,
@@ -126,8 +158,9 @@ null="#(NOT len( Log.getlogid() ))#"
 		<cfqueryparam value="#Log.gettablename()#" cfsqltype="CF_SQL_VARCHAR" />,
 		<cfqueryparam value="#Log.getactivity()#" cfsqltype="CF_SQL_VARCHAR" />,
 		<cfqueryparam value="#Log.getcomment()#" cfsqltype="CF_SQL_VARCHAR" />,
-		<cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_BINARY" />,
-		<cfqueryparam value="#Log.getisvisible()#" cfsqltype="CF_SQL_BIT" />
+<!----[  		<cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_TIMESTAMP" />,  ]----MK ---->
+		<cfqueryparam value="#Log.getisvisible()#" cfsqltype="CF_SQL_BIT" />,
+        <cfqueryparam value="#Log.getSeen()#" cfsqltype="CF_SQL_BIT" />
 		   ) 
 		SELECT Ident_Current('Log') as LogID
 		SET NOCOUNT OFF
@@ -148,7 +181,8 @@ null="#(NOT len( Log.getlogid() ))#"
         tablename  = <cfqueryparam value="#Log.getTableName()#" cfsqltype="CF_SQL_VARCHAR"/>,
         activity  = <cfqueryparam value="#Log.getActivity()#" cfsqltype="CF_SQL_VARCHAR"/>,
         comment  = <cfqueryparam value="#Log.getComment()#" cfsqltype="CF_SQL_VARCHAR"/>,
-        isvisible  = <cfqueryparam value="#Log.getIsVisible()#" cfsqltype="CF_SQL_BIT"/>
+        isvisible  = <cfqueryparam value="#Log.getIsVisible()#" cfsqltype="CF_SQL_BIT"/>,
+        seen = <cfqueryparam value="#Log.getSeen()#" cfsqltype="CF_SQL_BIT" />
 						
 		WHERE 
 		LogID = <cfqueryparam value="#Log.getLogID()#"   cfsqltype="CF_SQL_INTEGER" />
