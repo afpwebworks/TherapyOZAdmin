@@ -19,9 +19,11 @@ null="#(NOT len( Site.getsiteid() ))#"
 <!--- Constructor / initialisation --->
 <cffunction name="init" access="Public" returntype="SitesDAO" output="false" hint="Initialises the controller">
 <cfargument name="argsConfiguration" required="true" type="core.config.configbean" />
+<cfargument name="argsLog" required="true" type="any" />
 	<cfset variables.config  = arguments.argsConfiguration />
 	<cfset variables.dsn = variables.config.getDSN() />
 	<cfset variables.austime = variables.config.getAusTime() />
+    <cfset variables.Log = arguments.argsLog/>
 	<cfreturn this />
 </cffunction>
 
@@ -29,6 +31,19 @@ null="#(NOT len( Site.getsiteid() ))#"
 	<cfargument name="UserService" type="any" required="true"/>
 	<cfset variables.UserService = arguments.UserService/>
 </cffunction>
+
+<cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
+
+    <cfscript>
+	 var Log = 	variables.Log;
+	 log.setSiteID(  variables.userservice.getUSer().getSiteID() );
+	 Log.setUserID(  variables.userservice.getUser().getUserID() );
+	 
+	</cfscript>
+	<cfset variables.Log = Log/>
+    <cfreturn variables.log />
+</cffunction>
+
 
 
 <cffunction name="save" access="public" returntype="Site" output="false" hint="DAO method">
@@ -52,6 +67,15 @@ null="#(NOT len( Site.getsiteid() ))#"
 		WHERE 
 		SiteID = <cfqueryparam value="#Site.getSiteID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery>	
+     <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Sites");
+	variables.log.setComment( "Deleted the site");
+	variables.log.setActivity( "Delete Site" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 </cffunction>
 
 
@@ -65,6 +89,15 @@ null="#(NOT len( Site.getsiteid() ))#"
 		WHERE 
 		SiteID = <cfqueryparam value="#Site.getSiteID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery>	
+     <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Sites");
+	variables.log.setComment( "Undeleted the site");
+	variables.log.setActivity( "Undelete Site" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 </cffunction>
 
 
@@ -141,6 +174,15 @@ null="#(NOT len( Site.getsiteid() ))#"
 		SET NOCOUNT OFF
 	</cfquery>
 	<cfset Site.setSiteID(qSiteInsert.SiteID)>
+     <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Sites");
+				variables.log.setComment( "Created the site #site.getSitename()#");
+				variables.log.setActivity( "Create" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 
 	<cfreturn Site />
 </cffunction>
@@ -163,7 +205,16 @@ null="#(NOT len( Site.getsiteid() ))#"
 		WHERE 
 		SiteID = <cfqueryparam value="#Site.getSiteID()#"   cfsqltype="CF_SQL_INTEGER" />
 	</cfquery>
-	
+	<!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+					InitLog( variables.Log);
+					variables.log.setTablename( "Sites");
+					variables.log.setComment( "Updated the details of the site #site.getSitename()#");
+					variables.log.setActivity( "Update" );
+					variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    
 	<cfreturn Site />
 </cffunction>
 

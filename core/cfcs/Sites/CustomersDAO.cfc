@@ -18,9 +18,11 @@ null="#(NOT len( Customer.getcustomerid() ))#"
 <!--- Constructor / initialisation --->
 <cffunction name="init" access="Public" returntype="CustomersDAO" output="false" hint="Initialises the controller">
 <cfargument name="argsConfiguration" required="true" type="core.config.configbean" />
+<cfargument name="argsLog" required="true" type="any" />
 	<cfset variables.config  = arguments.argsConfiguration />
 	<cfset variables.dsn = variables.config.getDSN() />
 	<cfset variables.austime = variables.config.getAusTime() />
+    <cfset variables.Log = arguments.argsLog/>
 	<cfreturn this />
 </cffunction>
 
@@ -28,6 +30,19 @@ null="#(NOT len( Customer.getcustomerid() ))#"
 	<cfargument name="UserService" type="any" required="true"/>
 	<cfset variables.UserService = arguments.UserService/>
 </cffunction>
+
+<cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
+
+    <cfscript>
+	 var Log = 	variables.Log;
+	 log.setSiteID(  variables.userservice.getUSer().getSiteID() );
+	 Log.setUserID(  variables.userservice.getUser().getUserID() );
+	 
+	</cfscript>
+	<cfset variables.Log = Log/>
+    <cfreturn variables.log />
+</cffunction>
+
 
 
 <cffunction name="save" access="public" returntype="Customer" output="false" hint="DAO method">
@@ -51,6 +66,15 @@ null="#(NOT len( Customer.getcustomerid() ))#"
 		WHERE 
 		CustomerID = <cfqueryparam value="#Customer.getCustomerID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery>	
+     <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Customers");
+	variables.log.setComment( "Deleted a customer");
+	variables.log.setActivity( "Delete" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 </cffunction>
 
 
@@ -64,6 +88,15 @@ null="#(NOT len( Customer.getcustomerid() ))#"
 		WHERE 
 		CustomerID = <cfqueryparam value="#Customer.getCustomerID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery>	
+    <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Customers");
+	variables.log.setComment( "Undeleted a customer");
+	variables.log.setActivity( "Undelete" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
 </cffunction>
 
 
@@ -170,6 +203,17 @@ null="#(NOT len( Customer.getcustomerid() ))#"
 		SET NOCOUNT OFF
 	</cfquery>
 	<cfset Customer.setCustomerID(qCustomerInsert.CustomerID)>
+    
+    <!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Customers");
+				variables.log.setComment( "Created a customer #Customer.getCustomername()#");
+				variables.log.setActivity( "Create" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+               
 
 	<cfreturn Customer />
 </cffunction>
@@ -199,7 +243,17 @@ null="#(NOT len( Customer.getcustomerid() ))#"
 		WHERE 
 		CustomerID = <cfqueryparam value="#Customer.getCustomerID()#"   cfsqltype="CF_SQL_INTEGER" />
 	</cfquery>
-	
+	<!----[  Add a log entry that the user has logged in  ]----MK ---->
+               <cfscript>
+                  InitLog( variables.Log);
+               	variables.log.setTablename( "Customers");
+				variables.log.setComment( "Updated customer details for #Customer.getCustomername()#");
+				variables.log.setActivity( "Update" );
+                variables.log.setDateAdded( now() );
+               </cfscript>
+               <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    
+    
 	<cfreturn Customer />
 </cffunction>
 
