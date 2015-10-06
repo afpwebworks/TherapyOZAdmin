@@ -3,7 +3,8 @@
 ==========================================================================================================
 Filename:    DeleteSiteTemplate.cfm
 Description: Deletes a SiteTemplate from the database and returns the user to the originating page.  Reqires ColdSpring 1.0
-Date:        23/Sep/2015
+Client:      Therapy OZ Admin
+Date:        30/Sep/2015
 Author:      Michael Kear
 
 Revision history: 
@@ -36,7 +37,6 @@ Revision history:
   <cflocation addtoken="no" url="#cgi.HTTP_REFERER#" />
 </cfif>
 </cfsilent>
-<cfsetting enablecfoutputonly="yes">
 <cfinclude template="/includes/adminheader.cfm">
 
 <cfoutput>

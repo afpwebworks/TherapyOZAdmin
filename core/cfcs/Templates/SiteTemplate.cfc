@@ -4,7 +4,8 @@
 ==========================================================================================================
 Filename:    SiteTemplate.cfc
 Description: A bean which models the SiteTemplate record
-Date:        23/Sep/2015
+Client:      Therapy OZ Admin
+Date:        30/Sep/2015
 Author:      Michael Kear
 
 Revision history:

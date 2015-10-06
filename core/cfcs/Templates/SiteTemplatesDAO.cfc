@@ -4,7 +4,8 @@
 ==========================================================================================================
 Filename:    SiteTemplatesDAO.cfc
 Description: DAO Component Handles all Database access for the table SiteTemplates.  Requires Coldspring v1.0
-Date:        23/Sep/2015
+Client:      Therapy OZ Admin
+Date:        30/Sep/2015
 Author:      Michael Kear
 
 Revision history: 
@@ -17,7 +18,9 @@ null="#(NOT len( SiteTemplate.getsitetemplateid() ))#"
 </cfsilent>
 <!--- Constructor / initialisation --->
 <cffunction name="init" access="Public" returntype="SiteTemplatesDAO" output="false" hint="Initialises the controller">
-<cfargument name="argsConfiguration" required="true" type="core.config.configbean" />
+<cfargument name="argsConfiguration" required="true" type="cfcs.config.configbean" />
+<cfargument name="argsLog" required="true" type="any" />
+    <cfset variables.Log = arguments.argsLog/>    
 	<cfset variables.config  = arguments.argsConfiguration />
 	<cfset variables.dsn = variables.config.getDSN() />
 	<cfset variables.austime = variables.config.getAusTime() />
@@ -27,6 +30,17 @@ null="#(NOT len( SiteTemplate.getsitetemplateid() ))#"
 <cffunction name="setUserService" access="public" output="false" returntype="void" hint="Dependency: User Service">
 	<cfargument name="UserService" type="any" required="true"/>
 	<cfset variables.UserService = arguments.UserService/>
+</cffunction>
+
+
+<cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
+    <cfscript>
+	 var Log = 	variables.Log;
+	 log.setSiteID(  variables.userservice.getUSer().getSiteID() );
+	 Log.setUserID(  variables.userservice.getUser().getUserID() );
+	</cfscript>
+	<cfset variables.Log = Log/>
+    <cfreturn variables.log />
 </cffunction>
 
 
@@ -51,6 +65,16 @@ null="#(NOT len( SiteTemplate.getsitetemplateid() ))#"
 		WHERE 
 		SiteTemplateID = <cfqueryparam value="#SiteTemplate.getSiteTemplateID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery>	
+     <!----[  Add a log entry for this function  ]----MK ---->
+          <cfscript>
+              InitLog( variables.Log);
+              variables.log.setTablename( "SiteTemplates");
+              variables.log.setComment( "Deleted a SiteTemplate #SiteTemplate.getTemplateName()#");
+              variables.log.setActivity( "Delete" );
+              variables.log.setDateAdded( now() );
+           </cfscript>
+           <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    
 </cffunction>
 
 
@@ -63,7 +87,18 @@ null="#(NOT len( SiteTemplate.getsitetemplateid() ))#"
 		Set IsVisible = '1'
 		WHERE 
 		SiteTemplateID = <cfqueryparam value="#SiteTemplate.getSiteTemplateID()#"  cfsqltype="CF_SQL_INTEGER"/>
-	</cfquery>	
+	</cfquery>
+    
+     <!----[  Add a log entry for this function  ]----MK ---->
+          <cfscript>
+              InitLog( variables.Log);
+              variables.log.setTablename( "SiteTemplates");
+              variables.log.setComment( "Undeleted a SiteTemplate #SiteTemplate.getTemplateName()#");
+              variables.log.setActivity( "Undelete" );
+              variables.log.setDateAdded( now() );
+           </cfscript>
+           <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    	
 </cffunction>
 
 
@@ -132,6 +167,17 @@ null="#(NOT len( SiteTemplate.getsitetemplateid() ))#"
 	</cfquery>
 	<cfset SiteTemplate.setSiteTemplateID(qSiteTemplateInsert.SiteTemplateID)>
 
+     <!----[  Add a log entry for this function  ]----MK ---->
+        <cfscript>
+             InitLog( variables.Log);
+             variables.log.setTablename( "SiteTemplates");
+             variables.log.setComment( "Created a SiteTemplate #SiteTemplate.getTemplateName()#");
+             variables.log.setActivity( "Create" );
+             variables.log.setDateAdded( now() );
+         </cfscript>
+         <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    	
+
 	<cfreturn SiteTemplate />
 </cffunction>
 
@@ -141,14 +187,26 @@ null="#(NOT len( SiteTemplate.getsitetemplateid() ))#"
 	<cfset var SiteTemplateUpdate = 0 >
 	<cfquery name="SiteTemplateUpdate" datasource="#variables.dsn#" >
 		UPDATE SiteTemplates SET
-templatename  = <cfqueryparam value="#SiteTemplate.getTemplateName()#" cfsqltype="CF_SQL_VARCHAR"/>,
-isvisible  = <cfqueryparam value="#SiteTemplate.getIsVisible()#" cfsqltype="CF_SQL_BIT"/>,
-dateupdated  = <cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_TIMESTAMP" />,
-updatedby  = <cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/>
+        templatename  = <cfqueryparam value="#SiteTemplate.getTemplateName()#" cfsqltype="CF_SQL_VARCHAR"/>,
+        isvisible  = <cfqueryparam value="#SiteTemplate.getIsVisible()#" cfsqltype="CF_SQL_BIT"/>,
+        dateupdated  = <cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+        updatedby  = <cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/>
 						
 		WHERE 
 		SiteTemplateID = <cfqueryparam value="#SiteTemplate.getSiteTemplateID()#"   cfsqltype="CF_SQL_INTEGER" />
 	</cfquery>
+     
+     <!----[  Add a log entry for this function  ]----MK ---->
+        <cfscript>
+             InitLog( variables.Log);
+             variables.log.setTablename( "SiteTemplates");
+             variables.log.setComment( "Updated a template #SiteTemplate.getTemplateName()#");
+             variables.log.setActivity( "Update" );
+             variables.log.setDateAdded( now() );
+         </cfscript>
+         <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    	
+    
 	
 	<cfreturn SiteTemplate />
 </cffunction>

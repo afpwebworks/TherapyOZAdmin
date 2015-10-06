@@ -3,7 +3,8 @@
 ==========================================================================================================
 Filename:    EditSiteTemplate.cfm
 Description: Page for handling the edit and add of data for SiteTemplate data.  Requires Coldspring 1.0
-Date:        23/Sep/2015
+Client:      Therapy OZ Admin
+Date:        30/Sep/2015
 Author:      Michael Kear
 
 Revision history: 
