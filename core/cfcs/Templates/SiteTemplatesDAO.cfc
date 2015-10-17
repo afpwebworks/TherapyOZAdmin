@@ -18,7 +18,7 @@ null="#(NOT len( SiteTemplate.getsitetemplateid() ))#"
 </cfsilent>
 <!--- Constructor / initialisation --->
 <cffunction name="init" access="Public" returntype="SiteTemplatesDAO" output="false" hint="Initialises the controller">
-<cfargument name="argsConfiguration" required="true" type="cfcs.config.configbean" />
+<cfargument name="argsConfiguration" required="true" type="core.config.configbean" />
 <cfargument name="argsLog" required="true" type="any" />
     <cfset variables.Log = arguments.argsLog/>    
 	<cfset variables.config  = arguments.argsConfiguration />
