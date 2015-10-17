@@ -51,16 +51,22 @@ Page and structure management CFCs
 -->		
 	<bean id="TreeLibrary" class="core.cfcs.PageManagement.TreeLibrary">
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
-		<property name="UserService"><ref bean="UserService"/></property>
+        <constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
+        <property name="UserService"><ref bean="UserService" /></property>
 	</bean>
 	<bean id="Page" class="core.cfcs.PageManagement.Page" singleton="False"/>
 	<bean id="SiteTemplate" class="core.cfcs.templates.SiteTemplate" singleton="false" />
-	<bean id="SiteTemplatesDAO" class="core.cfcs.[foldername].SiteTemplatesDAO">
+	<bean id="SiteTemplatesDAO" class="core.cfcs.templates.SiteTemplatesDAO">
         <constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
         <constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
         <property name="UserService"><ref bean="UserService" /></property>
 	</bean>
-	
+	<bean id="PageTemplate" class="core.cfcs.templates.PageTemplate" singleton="false" />
+	<bean id="PageTemplatesDAO" class="core.cfcs.templates..PageTemplatesDAO">
+        <constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
+        <constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
+        <property name="UserService"><ref bean="UserService" /></property>
+    </bean>
 <!--
 =====================================================================
 Business CFCs  
@@ -73,7 +79,7 @@ Business CFCs
 		<property name="UserService"><ref bean="UserService" /></property>
 	</bean>
 	<bean id="Customer" class="core.cfcs.sites.Customer" singleton="false" />
-	<bean id="CustomersDAO" class="core.cfcs.sites..CustomersDAO">
+	<bean id="CustomersDAO" class="core.cfcs.sites.CustomersDAO">
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
 		<constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
 		<property name="UserService"><ref bean="UserService" /></property>

@@ -1,24 +1,29 @@
-<cfcomponent displayname="TreeLibrary" output="false" hint="Manipulates pages in the tree.">
-
+<cfcomponent displayname="Pages DAO" output="false" hint="DAO Component Handles all Database access for the table Pages.  Requires Coldspring v1.0">
 <cfsilent>
 <!----
 ==========================================================================================================
-Filename:     TreeLibrary.cfc
-Description:  Manipulates pages in the tree.
-Date:         20/8/2015
-Author:       Michael Kear, AFP Webworks
+Filename:    TreeLibrary.cfc
+Description: DAO Component Handles all Database access for the table Pages.  Requires Coldspring v1.0
+Client:      Therapy OZ Admin
+Date:        17/Oct/2015
+Author:      Michael Kear
 
 Revision history: 
+
+If a column needs to enter NULL Instead of nothing, use the following code in that CFQUERYparam:
+null="#(NOT len( Page.getpageid() ))#"
 
 ==========================================================================================================
 --->
 </cfsilent>
-
-<cffunction name="init" access="public" output="no" returntype="TreeLibrary" hint="Initialises the values required to use the component.">
-   <cfargument name="argsConfiguration" required="true" type="any" />
-	<cfset var config  = arguments.argsConfiguration />
-	<cfset variables.config = arguments.argsConfiguration />
-	<cfset variables.dsn = config.getDSN() />
+<!--- Constructor / initialisation --->
+<cffunction name="init" access="Public" returntype="TreeLibrary" output="false" hint="Initialises the controller">
+<cfargument name="argsConfiguration" required="true" type="core.config.configbean" />
+<cfargument name="argsLog" required="true" type="any" />
+    <cfset variables.Log = arguments.argsLog/>    
+	<cfset variables.config  = arguments.argsConfiguration />
+	<cfset variables.dsn = variables.config.getDSN() />
+	<cfset variables.austime = variables.config.getAusTime() />
 	<cfreturn this />
 </cffunction>
 
@@ -27,50 +32,25 @@ Revision history:
 	<cfset variables.UserService = arguments.UserService/>
 </cffunction>
 
-<!----[      
-==================================================================================================================
-Basic reporting functions
-==================================================================================================================
-  ]----MK ---->
- <cffunction name="Read" access="public" output="false" returntype="Page" hint="Reads the content of the page from the database.">
- 	<cfargument name="argsPage" required="true" type="Page" />
-    	<cfset var Page = arguments.argsPage />
-        <cfset var qPage = 0 />
-        
-        <cfquery name="qPage" datasource="#variables.dsn#">
-        	SELECT Pageid, pagename, noderec.ToString() as Noderec, nodeRec.GetLevel() as Level 
-            FROM Pages
-            WHERE  PageID = <cfqueryparam value="#page.getPageID()#" cfsqltype="cf_sql_integer" />
-            AND IsVisible = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
-        </cfquery>
-        
-        <cfif qPage.recordCount >
-		<cfscript>
-		
-                     Page.setPageID(qPage.Pageid);
-                     Page.setPageName(qPage.pagename);
-                     Page.setNodeRec(qPage.Noderec);
-					 Page.setLevel(qPage.Level);
-                     
-		</cfscript>
-        <cfset getOwner(Page) />
-	</cfif>
-	<cfreturn Page />
- </cffunction> 
-  
-<!----[      
-==================================================================================================================
-Funtions to insert, update and move pages around the tree.
-==================================================================================================================
-  ]----MK ---->	
-  
+
+<cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
+    <cfscript>
+	 var Log = 	variables.Log;
+	 log.setSiteID(  variables.userservice.getUSer().getSiteID() );
+	 Log.setUserID(  variables.userservice.getUser().getUserID() );
+	</cfscript>
+	<cfset variables.Log = Log/>
+    <cfreturn variables.log />
+</cffunction>
+
+
 <cffunction name="save" access="public" returntype="Page" output="false" hint="DAO method">
-  <cfargument name="Page" type="Page" required="yes" />
-	<!-----[  If a PageID exists in the arguments, its an update. Run the update method, otherwise run create.  ]----->
-    <cfif (arguments.Page.getPageID() neq "0")>	
+<cfargument name="Page" type="Page" required="yes" />
+<!-----[  If a PageID exists in the arguments, its an update. Run the update method, otherwise run create.  ]----->
+<cfif (arguments.Page.getPageID() neq "0")>	
 		<cfset Page = update(arguments.Page)/>
 	<cfelse>
-		<cfset Page = InsertPage(arguments.Page)/>
+		<cfset Page = create(arguments.Page)/>
 	</cfif>
 	<cfreturn Page />
 </cffunction>
@@ -85,11 +65,150 @@ Funtions to insert, update and move pages around the tree.
 		Set IsVisible = '0'
 		WHERE 
 		PageID = <cfqueryparam value="#Page.getPageID()#"  cfsqltype="CF_SQL_INTEGER"/>
-	</cfquery>	
+	</cfquery> 
+     <!----[  Add a log entry for this function  ]----MK ---->
+          <cfscript>
+              InitLog( variables.Log);
+              variables.log.setTablename( "Pages");
+              variables.log.setComment( "Deleted a Page. PageID = #Page.getPageID()#");
+              variables.log.setActivity( "Delete" );
+              variables.log.setDateAdded( now() );
+           </cfscript>
+           <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+			
 </cffunction>
 
 
+<cffunction name="UnDelete" returntype="void" output="false" hint="DAO method" >
+<cfargument name="Page" type="Page" required="true" /> 
+	<cfset var qPageUnDelete = 0 >
+<!-----[  to UnDelete, set 'IsVisible' flag to 1 (true)  ]--->
+		<cfquery name="qPageDelete" datasource="#variables.dsn#" >
+		UPDATE Pages
+		Set IsVisible = '1'
+		WHERE 
+		PageID = <cfqueryparam value="#Page.getPageID()#"  cfsqltype="CF_SQL_INTEGER"/>
+	</cfquery>
+    
+     <!----[  Add a log entry for this function  ]----MK ---->
+          <cfscript>
+              InitLog( variables.Log);
+              variables.log.setTablename( "Pages");
+              variables.log.setComment( "Restored a page. PageID = #Page.getPageID()#");
+              variables.log.setActivity( "Undelete" );
+              variables.log.setDateAdded( now() );
+           </cfscript>
+           <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    	
+</cffunction>
 
+
+<cffunction name="read" access="public" returntype="Page" output="false" hint="DAO Method. - Reads a Page into the bean">
+<cfargument name="argsPage" type="Page" required="true" />
+	<cfset var Page  =  arguments.argsPage />
+	<cfset var QPagesselect = "" />
+	<cfquery name="QPagesselect" datasource="#variables.dsn#">
+		SELECT 
+		PageID, PageName, noderec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
+		FROM Pages 
+		WHERE 
+		IsVisible = '1' AND
+        PageID = <cfqueryparam value="#Page.getPageID()#"  cfsqltype="CF_SQL_INTEGER"/>
+	</cfquery>
+	<cfif QPagesselect.recordCount >
+		<cfscript>
+		Page.setPageID(QPagesselect.PageID);
+         Page.setPageName(QPagesselect.PageName);
+         Page.setNodeRec(QPagesselect.NodeRec);
+         Page.setSiteno(QPagesselect.Siteno);
+         Page.setTemplate(QPagesselect.Template);
+         Page.setTeaser(QPagesselect.Teaser);
+         Page.setKeywords(QPagesselect.Keywords);
+         Page.setLive(QPagesselect.Live);
+		 Page.setLevel(QPagesselect.Level);
+         Page.setEmbargoed(QPagesselect.Embargoed);
+         Page.setEmbargoDate(QPagesselect.EmbargoDate);
+         Page.setExpires(QPagesselect.Expires);
+         Page.setDateExpires(QPagesselect.DateExpires);
+         Page.setAccessLevel(QPagesselect.AccessLevel);
+         Page.setEditLevel(QPagesselect.EditLevel);
+         Page.setApproveLevel(QPagesselect.ApproveLevel);
+         Page.setEditStatus(QPagesselect.EditStatus);
+         Page.setLockedForEdit(QPagesselect.LockedForEdit);
+         Page.setApprovedBy(QPagesselect.ApprovedBy);
+         Page.setApprovedDate(QPagesselect.ApprovedDate);
+         Page.setDateAdded(QPagesselect.DateAdded);
+         Page.setDateUpdated(QPagesselect.DateUpdated);
+         Page.setUpdatedBy(QPagesselect.UpdatedBy);
+         Page.setIsVisible(QPagesselect.IsVisible);
+         Page.setPageTitle(QPagesselect.PageTitle);
+         Page.setVersion(QPagesselect.Version);
+         
+		</cfscript>
+	</cfif>
+	<cfreturn Page />
+</cffunction>
+		
+
+<cffunction name="GetAllPages" access="public" output="false" returntype="query" hint="Returns a query of all Pages in our Database">
+<cfset var QgetallPages = 0 />
+	<cfquery name="QgetallPages" datasource="#variables.dsn#">
+		SELECT PageID, PageName, NodeRec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
+		FROM Pages 
+		WHERE IsVisible = '1'
+        
+		ORDER BY PageID
+	</cfquery>
+	<cfreturn QgetallPages />
+</cffunction>
+
+
+<cffunction name="GetPagesForSite" access="public" output="false" returntype="query" hint="Returns a query of all Pages in our Database for a specific site">
+	<cfargument name="argsSiteNO" default="1000" required="yes" type="numeric" />
+    
+	 <cfset var SiteNO = arguments.argsSiteNO />   
+	 <cfset var QgetallPages = 0 />
+	<cfquery name="QgetallPages" datasource="#variables.dsn#">
+		SELECT PageID, PageName, NodeRec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
+		FROM Pages 
+		WHERE IsVisible = '1' AND
+        SiteNo = <cfqueryparam value="#SiteNO#" cfsqltype="cf_sql_integer" />
+        
+		ORDER BY noderec,  PageID
+	</cfquery>
+	<cfreturn QgetallPages />
+</cffunction>
+
+
+<cffunction name="LockPageForEdit" access="public" output="no" returntype="page" hint="Locks the page for editing,  and updates teh page objcct with teh details.">
+	<cfargument name="argsPage" required="yes" hint="Page object of the page being edited.">
+    <cfset var page= arguments.argsPage />
+    <cfset var q = 0 />
+    <cfquery name="q" datasource="#variables.dsn#">
+    	Update pages set LockedForEdit = <cfqueryparam value="#variables.userservice.getuser().getUserLastname()#" cfsqltype="cf_sql_varchar" />
+        WHERE PageID = <cfqueryparam value="#page.getPageID()#" cfsqltype="cf_sql_integer" />
+    </cfquery>
+		<cfset page.setLockedForEdit( variables.userservice.getuser().getUserLastname()  ) />
+        
+        <cfreturn page />
+    
+</cffunction>
+
+
+<cffunction name="UnLockPageForEdit" access="public" output="no" returntype="page" hint="UnLocks the page after editing,  and updates teh page objcct with the details.">
+	<cfargument name="argsPage" required="yes" hint="Page object of the page being edited.">
+    <cfset var page= arguments.argsPage />
+    <cfset var q = 0 />
+    <cfquery name="q" datasource="#variables.dsn#">
+    	Update pages set LockedForEdit = <cfqueryparam value="" cfsqltype="cf_sql_varchar" />
+        WHERE PageID = <cfqueryparam value="#page.getPageID()#" cfsqltype="cf_sql_integer" />
+    </cfquery>
+    <cfset page.setLockedForEdit( "" ) />
+        
+        <cfreturn page />
+</cffunction>
+
+<!-----[  Private 'helper' methods called by other methods only.  ]----->
 
 
 <cffunction name="InsertPage" access="public" returntype="Page" output="no" hint="Adds a page to the tree, underneath the pageid=ownernodeid">
@@ -138,11 +257,87 @@ GO
 <cfquery name="qInsertPage" datasource="#variables.dsn#">
 	EXEC usp_addpage <cfqueryparam value="#Owner#" cfsqltype="cf_sql_integer" />, <cfqueryparam value="#PageName#" cfsqltype="cf_sql_varchar" />
 </cfquery>
+<!----[  Returns the pageid, so set the pageid in the page object.  ]----MK ---->
+
+<cfset page.setPageID(  qInsertPage.PageID  ) />
 
 </cffunction>
 
 
 
+
+<cffunction name="create"  access="private" returntype="Page" output="false" hint="DAO method">
+<cfargument name="argsPage" type="Page" required="yes" displayname="create" />
+	<cfset var qPageInsert = 0 />
+	<cfset var Page = arguments.argsPage />
+    
+    <cfset InsertPage( Page    ) >
+   <!----[   Now update the created page with the rest of the varibles  ]----MK ---->
+   <cfset update(  Page  ) />
+    
+    
+     <!----[  Add a log entry for this function  ]----MK ---->
+        <cfscript>
+             InitLog( variables.Log);
+             variables.log.setTablename( "Pages");
+             variables.log.setComment( "Added a page #page.getPageID()#, #Page.getPageTitle()#");
+             variables.log.setActivity( "Create" );
+             variables.log.setDateAdded( now() );
+         </cfscript>
+         <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    
+	
+	<cfreturn Page />
+</cffunction>
+
+<cffunction name="update" access="private" returntype="Page" output="false" hint="DAO method">
+<cfargument name="argsPage" type="Page" required="yes" />
+	<cfset var Page = arguments.argsPage />
+	<cfset var PageUpdate = 0 >
+	<cfquery name="PageUpdate" datasource="#variables.dsn#" >
+		UPDATE Pages SET
+            pagename  = <cfqueryparam value="#Page.getPageName()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            noderec  = <cfqueryparam value="#Page.getNodeRec()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            siteno  = <cfqueryparam value="#Page.getSiteno()#" cfsqltype="CF_SQL_INTEGER"/>,
+            template  = <cfqueryparam value="#Page.getTemplate()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            teaser  = <cfqueryparam value="#Page.getTeaser()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            keywords  = <cfqueryparam value="#Page.getKeywords()#" cfsqltype="CF_SQL_LONGVARCHAR"/>,
+            live  = <cfqueryparam value="#Page.getLive()#" cfsqltype="CF_SQL_BIT"/>,
+            embargoed  = <cfqueryparam value="#Page.getEmbargoed()#" cfsqltype="CF_SQL_BIT"/>,
+            embargodate  = <cfqueryparam value="#Page.getEmbargoDate()#" cfsqltype="CF_SQL_TIMESTAMP"/>,
+            expires  = <cfqueryparam value="#Page.getExpires()#" cfsqltype="CF_SQL_BIT"/>,
+            dateexpires  = <cfqueryparam value="#Page.getDateExpires()#" cfsqltype="CF_SQL_TIMESTAMP"/>,
+            accesslevel  = <cfqueryparam value="#Page.getAccessLevel()#" cfsqltype="CF_SQL_INTEGER"/>,
+            editlevel  = <cfqueryparam value="#Page.getEditLevel()#" cfsqltype="CF_SQL_INTEGER"/>,
+            approvelevel  = <cfqueryparam value="#Page.getApproveLevel()#" cfsqltype="CF_SQL_INTEGER"/>,
+            editstatus  = <cfqueryparam value="#Page.getEditStatus()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            lockedforedit  = <cfqueryparam value="#Page.getLockedForEdit()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            approvedby  = <cfqueryparam value="#Page.getApprovedBy()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            approveddate  = <cfqueryparam value="#Page.getApprovedDate()#" cfsqltype="CF_SQL_TIMESTAMP" null="#(NOT len( Page.getApprovedDate() ))#"/>,
+            dateupdated  = <cfqueryparam value="#variables.config.getAustime()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+            updatedby  = <cfqueryparam value="#variables.userService.getUser().getUserId()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            isvisible  = <cfqueryparam value="#Page.getIsVisible()#" cfsqltype="CF_SQL_BIT"/>,
+            pagetitle  = <cfqueryparam value="#Page.getPageTitle()#" cfsqltype="CF_SQL_VARCHAR"/>,
+            version  = <cfqueryparam value="#Page.getVersion()#" cfsqltype="CF_SQL_INTEGER"/>
+						
+		WHERE 
+		PageID = <cfqueryparam value="#Page.getPageID()#"   cfsqltype="CF_SQL_INTEGER" />
+	</cfquery>
+     
+     <!----[  Add a log entry for this function  ]----MK ---->
+        <cfscript>
+             InitLog( variables.Log);
+             variables.log.setTablename( "Pages");
+             variables.log.setComment( "Updated a page #page.getPageID()#, #Page.getPageTitle()#");
+             variables.log.setActivity( "Update" );
+             variables.log.setDateAdded( now() );
+         </cfscript>
+         <cfset application.beanfactory.getbean("LogsDAO").save( variables.log ) />
+    	
+    
+	
+	<cfreturn Page />
+</cffunction>
 
 
 <!----[      
