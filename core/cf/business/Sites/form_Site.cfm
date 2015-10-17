@@ -52,7 +52,6 @@ SiteTemplates = application.beanfactory.getbean("SiteTemplatesDAO").GetAllSiteTe
     </select>
    </div>
   
-  
     <div class="form-group">
       <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
     </div>
