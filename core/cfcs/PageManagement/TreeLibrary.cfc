@@ -32,6 +32,11 @@ null="#(NOT len( Page.getpageid() ))#"
 	<cfset variables.UserService = arguments.UserService/>
 </cffunction>
 
+<cffunction name="setPageArchive" access="public" output="false" returntype="void" hint="Dependency: PageArchive Service">
+	<cfargument name="PageArchive" type="any" required="true"/>
+	<cfset variables.PageArchive = arguments.PageArchive/>
+</cffunction>
+
 
 <cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
     <cfscript>
@@ -47,7 +52,12 @@ null="#(NOT len( Page.getpageid() ))#"
 <cffunction name="save" access="public" returntype="Page" output="false" hint="DAO method">
 <cfargument name="Page" type="Page" required="yes" />
 <!-----[  If a PageID exists in the arguments, its an update. Run the update method, otherwise run create.  ]----->
-<cfif (arguments.Page.getPageID() neq "0")>	
+<cfif (arguments.Page.getPageID() neq "0")>
+		<!----[  Get existing page details and put them into the archive page object for archiving.  ]----MK ---->	
+        <cfset variables.PageArchive.setPageID(  arguments.Page.getPageID()   ) />
+        <cfset read( variables.PageArchive ) />  
+        <!----[  Now insert exising page into the archive table.  ]----MK ---->   
+        <cfset archiveOldPage( variables.PageArchive ) />
 		<cfset Page = update(arguments.Page)/>
 	<cfelse>
 		<cfset Page = create(arguments.Page)/>
@@ -59,10 +69,17 @@ null="#(NOT len( Page.getpageid() ))#"
 <cffunction name="delete" returntype="void" output="false" hint="DAO method" >
 <cfargument name="Page" type="Page" required="true" /> 
 	<cfset var qPageDelete = 0 >
+    	<!----[  Archive the old page first.  ]----MK ---->
+        <!----[  Get existing page details and put them into the archive page object for archiving.  ]----MK ---->	
+        <cfset variables.PageArchive.setPageID(  arguments.Page.getPageID()   ) />
+        <cfset read( variables.PageArchive ) />  
+        <!----[  Now insert exising page into the archive table.  ]----MK ---->   
+        <cfset archiveOldPage( variables.PageArchive ) />
+        
 <!-----[  to delete, set 'IsVisible' flag to zero  ]--->
 		<cfquery name="qPageDelete" datasource="#variables.dsn#" >
 		UPDATE Pages
-		Set IsVisible = '0'
+		Set IsVisible = '0', version = version + 1
 		WHERE 
 		PageID = <cfqueryparam value="#Page.getPageID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery> 
@@ -82,10 +99,17 @@ null="#(NOT len( Page.getpageid() ))#"
 <cffunction name="UnDelete" returntype="void" output="false" hint="DAO method" >
 <cfargument name="Page" type="Page" required="true" /> 
 	<cfset var qPageUnDelete = 0 >
+    	<!----[  Archive the old page first.  ]----MK ---->
+        <!----[  Get existing page details and put them into the archive page object for archiving.  ]----MK ---->	
+        <cfset variables.PageArchive.setPageID(  arguments.Page.getPageID()   ) />
+        <cfset read( variables.PageArchive ) />  
+        <!----[  Now insert exising page into the archive table.  ]----MK ---->   
+        <cfset archiveOldPage( variables.PageArchive ) />
+    
 <!-----[  to UnDelete, set 'IsVisible' flag to 1 (true)  ]--->
 		<cfquery name="qPageDelete" datasource="#variables.dsn#" >
 		UPDATE Pages
-		Set IsVisible = '1'
+		Set IsVisible = '1', version = version + 1
 		WHERE 
 		PageID = <cfqueryparam value="#Page.getPageID()#"  cfsqltype="CF_SQL_INTEGER"/>
 	</cfquery>
@@ -292,8 +316,13 @@ GO
 
 <cffunction name="update" access="private" returntype="Page" output="false" hint="DAO method">
 <cfargument name="argsPage" type="Page" required="yes" />
-	<cfset var Page = arguments.argsPage />
-	<cfset var PageUpdate = 0 >
+	<cfscript>
+	 var Page = arguments.argsPage ;
+	 var PageUpdate = 0 ;
+ 	 var newversion = page.getVersion() + 1;
+	 page.setversion(  newversion ) ; 
+	 </cfscript>
+     
 	<cfquery name="PageUpdate" datasource="#variables.dsn#" >
 		UPDATE Pages SET
             pagename  = <cfqueryparam value="#Page.getPageName()#" cfsqltype="CF_SQL_VARCHAR"/>,
@@ -328,7 +357,7 @@ GO
         <cfscript>
              InitLog( variables.Log);
              variables.log.setTablename( "Pages");
-             variables.log.setComment( "Updated a page #page.getPageID()#, #Page.getPageTitle()#");
+             variables.log.setComment( "Updated a page #page.getPageID()#, #Page.getPageTitle()#") to version #page.getVersion()# ;
              variables.log.setActivity( "Update" );
              variables.log.setDateAdded( now() );
          </cfscript>
@@ -339,6 +368,49 @@ GO
 	<cfreturn Page />
 </cffunction>
 
+
+<cffunction name="archiveOldPage" access="public" returntype="Page" output="no" hint="Archives the old version of a page into the PageArchive table">
+   <cfargument name="argsPage" required="yes" type="Page" >
+   <cfset var PageAchive = arguments.argsPage />
+   <cfset var qPageAchiveInsert = 0 />
+
+	<cfquery name="qPageAchiveInsert" datasource="#variables.dsn#" >
+		SET NOCOUNT ON
+		INSERT into PagesArchive
+		( PageID, PageName, NodeRec, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, DateUpdated, UpdatedBy, AddedBy, IsVisible, PageTitle, Version ) VALUES
+		(
+
+		<cfqueryparam value="#PageAchive.getpageid()#" cfsqltype="CF_SQL_INTEGER" />,
+		<cfqueryparam value="#PageAchive.getpagename()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getnoderec()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getsiteno()#" cfsqltype="CF_SQL_INTEGER" />,
+		<cfqueryparam value="#PageAchive.gettemplate()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getteaser()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getkeywords()#" cfsqltype="CF_SQL_LONGVARCHAR" />,
+		<cfqueryparam value="#PageAchive.getlive()#" cfsqltype="CF_SQL_BIT" />,
+		<cfqueryparam value="#PageAchive.getembargoed()#" cfsqltype="CF_SQL_BIT" />,
+		<cfqueryparam value="#PageAchive.getembargodate()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+		<cfqueryparam value="#PageAchive.getexpires()#" cfsqltype="CF_SQL_BIT" />,
+		<cfqueryparam value="#PageAchive.getdateexpires()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+		<cfqueryparam value="#PageAchive.getaccesslevel()#" cfsqltype="CF_SQL_INTEGER" />,
+		<cfqueryparam value="#PageAchive.geteditlevel()#" cfsqltype="CF_SQL_INTEGER" />,
+		<cfqueryparam value="#PageAchive.getapprovelevel()#" cfsqltype="CF_SQL_INTEGER" />,
+		<cfqueryparam value="#PageAchive.geteditstatus()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getlockedforedit()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getapprovedby()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getapproveddate()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+		<cfqueryparam value="#PageAchive.getDateAdded()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+		<cfqueryparam value="#PageAchive.getDateUpdated()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+		<cfqueryparam value="#PageAchive.getUpdatedby()#" cfsqltype="CF_SQL_VARCHAR"/> ,
+        <cfqueryparam value="#PageAchive.getAddedby()#" cfsqltype="CF_SQL_VARCHAR"/> ,
+		<cfqueryparam value="#PageAchive.getisvisible()#" cfsqltype="CF_SQL_BIT" />,
+		<cfqueryparam value="#PageAchive.getpagetitle()#" cfsqltype="CF_SQL_VARCHAR" />,
+		<cfqueryparam value="#PageAchive.getversion()#" cfsqltype="CF_SQL_INTEGER" />
+		   ) 
+		SET NOCOUNT OFF
+	</cfquery>
+
+</cffunction>
 
 <!----[      
 ==================================================================================================================
