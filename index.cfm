@@ -27,7 +27,7 @@ RecentActivity = application.beanfactory.getbean("LogsDAO").GetMyLogs( session.u
           <h5>Recent Activity on your site</h5>
           <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
         </div>
-        <cfdump var="#session.user.getsnapshot()#" />
+
 <!----[          Recent activity box  ]----MK ---->
         <div class="ibox-content">
           <table class="table table-hover no-margins">
