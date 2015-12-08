@@ -53,7 +53,7 @@ Page and structure management CFCs
 		<constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>
         <constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
         <property name="UserService"><ref bean="UserService" /></property>
-		<property name="PageAchive"><ref bean="PageAchive" /></property>
+		<property name="PageArchive"><ref bean="PageArchive" /></property>
 	</bean>
 	<bean id="Page" class="core.cfcs.PageManagement.Page" singleton="False"/>
 	<bean id="SiteTemplate" class="core.cfcs.templates.SiteTemplate" singleton="false" />
@@ -74,12 +74,8 @@ Page and structure management CFCs
         <constructor-arg name="argsLog"><ref bean="Log"/></constructor-arg>
         <property name="UserService"><ref bean="UserService" /></property>
     </bean>
-    <bean id="PageAchive" class="core.cfcs.pagemanagement.Page" singleton="false" />
-	<bean id="PageArchiveDAO" class="core.cfcs.pagemanagement.PageArchiveDAO">
-        <constructor-arg name="argsConfiguration"><ref bean="configbean"/></constructor-arg>        
-        <property name="UserService"><ref bean="UserService" /></property>
-	</bean>
-<!--
+    <bean id="PageArchive" class="core.cfcs.pagemanagement.Page" singleton="false" />
+	<!--
 =====================================================================
 Business CFCs  
 =====================================================================
