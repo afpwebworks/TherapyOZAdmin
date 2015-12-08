@@ -38,6 +38,7 @@ LockedForEdit string
 ApprovedBy string 
 ApprovedDate any 
 DateAdded date #now()# 
+AddedBy string ('Script')
 DateUpdated date #now()# 
 UpdatedBy string ('Script') 
 IsVisible boolean true 
@@ -85,6 +86,7 @@ Date Format: DD/MM/YYYY
     <cfargument name="ApprovedBy" type="string" required="false" default="" />
     <cfargument name="ApprovedDate" type="any" required="false" default="" />
     <cfargument name="DateAdded" type="date" required="true" default="#now()#" />
+    <cfargument name="AddedBy" type="string" required="false" default="('Script')" />
     <cfargument name="DateUpdated" type="date" required="true" default="#now()#" />
     <cfargument name="UpdatedBy" type="string" required="false" default="('Script')" />
     <cfargument name="IsVisible" type="boolean" required="true" default="true" />
@@ -116,11 +118,12 @@ Date Format: DD/MM/YYYY
      setApprovedBy(arguments.ApprovedBy);
      setApprovedDate(arguments.ApprovedDate);
      setDateAdded(arguments.DateAdded);
+	 setAddedBy(arguments.AddedBy);
      setDateUpdated(arguments.DateUpdated);
      setUpdatedBy(arguments.UpdatedBy);
      setIsVisible(arguments.IsVisible);
      setPageTitle(arguments.PageTitle);
-     setVersion(arguments.Version);
+     setVersion(arguments.Version);	 
      return this;
 	</cfscript>
  	</cffunction>
@@ -425,6 +428,14 @@ Date Format: DD/MM/YYYY
     <cffunction name="getUpdatedBy" access="public" returntype="string" output="false">
 		   <cfreturn variables.instance.UpdatedBy />
 		</cffunction>
+     <cffunction name="setAddedBy" access="public" returntype="void" output="false">
+            <cfargument name="UpdatedBy" type="string" required="true" />
+            <cfset variables.instance.AddedBy = arguments.AddedBy />
+	    </cffunction>
+    <cffunction name="getAddedBy" access="public" returntype="string" output="false">
+		   <cfreturn variables.instance.AddedBy />
+		</cffunction>    
+        
     <cffunction name="setIsVisible" access="public" returntype="void" output="false">
             <cfargument name="IsVisible" type="boolean" required="true" />
             <cfset variables.instance.IsVisible = arguments.IsVisible />

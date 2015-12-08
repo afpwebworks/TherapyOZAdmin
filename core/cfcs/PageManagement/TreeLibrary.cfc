@@ -304,7 +304,7 @@ GO
         <cfscript>
              InitLog( variables.Log);
              variables.log.setTablename( "Pages");
-             variables.log.setComment( "Added a page #page.getPageID()#, #Page.getPageTitle()#");
+             variables.log.setComment( "Added a page #page.getPageID()#, #Page.getPageTitle()# version 1") ;
              variables.log.setActivity( "Create" );
              variables.log.setDateAdded( now() );
          </cfscript>
@@ -357,7 +357,7 @@ GO
         <cfscript>
              InitLog( variables.Log);
              variables.log.setTablename( "Pages");
-             variables.log.setComment( "Updated a page #page.getPageID()#, #Page.getPageTitle()#") to version #page.getVersion()# ;
+             variables.log.setComment( "Updated a page #page.getPageID()#, #Page.getPageTitle()#  to version #page.getVersion()#") ;
              variables.log.setActivity( "Update" );
              variables.log.setDateAdded( now() );
          </cfscript>
