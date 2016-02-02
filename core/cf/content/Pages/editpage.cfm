@@ -32,18 +32,18 @@ Revision history:
 <cfif isdefined("form.submit")>
 <!----[  <cfdump var="#form#" abort="true" />  ]----MK ---->
     
-		<!----[  If the page already exists, set the page object to the correct pageid  ]----MK ---->
+		<!----[  <!----[  If the page already exists, set the page object to the correct pageid  ]----MK ---->
 		<cfset Page.setPageID(  form.pageid ) />
-    <cfif page.getpageid() eq '0'>
-    	<!----[  Otherwise it's a new page .. so run the storedproc to create it.   ]----MK ---->    
-        <cfquery name="addpage" datasource="#application.dsn#">
-         exec usp_AddPage 
-         <cfqueryparam value="#form.pageowner#" cfsqltype="cf_sql_integer"/>,
-         <cfqueryparam value="#replace(form.pagetitle, ' ', '', "ALL")#" cfsqltype="cf_sql_varchar"/>, 
-         <cfqueryparam value="#session.user.getSiteID()#" cfsqltype="cf_sql_integer" />
-       </cfquery>
-       	<cfset page.setPageID( addpage.pageid   ) />
-    </cfif>
+			<cfif page.getpageid() eq '0'>
+                <!----[  Otherwise it's a new page .. so run the storedproc to create it.   ]----MK ---->    
+                <cfquery name="addpage" datasource="#application.dsn#">
+                 exec usp_AddPage 
+                 <cfqueryparam value="#form.pageowner#" cfsqltype="cf_sql_integer"/>,
+                 <cfqueryparam value="#replace(form.pagetitle, ' ', '', "ALL")#" cfsqltype="cf_sql_varchar"/>, 
+                 <cfqueryparam value="#session.user.getSiteID()#" cfsqltype="cf_sql_integer" />
+               </cfquery>
+               <cfset page.setPageID( addpage.pageid   ) />
+            </cfif>  ]----MK ---->
 
 	<cfset errorhandler = application.beanfactory.getBean("ErrorHandler") />    
    <cfscript>
@@ -51,6 +51,7 @@ Revision history:
 	  
 		  //Remove any spaces from pagename
          Page.setpagename(trim(  replace(form.pagetitle, ' ', '', "ALL")   ));
+		 Page.setPageID( form.pageid ) ;
          Page.setnoderec(trim(form.noderec));
          Page.setsiteno(trim(form.siteno));
          Page.settemplate(trim(form.template));
@@ -59,6 +60,7 @@ Revision history:
          Page.setlive(trim(form.live));
          Page.setembargoed(trim(form.embargoed));
          Page.setexpires(trim(form.expires));
+		 Page.setowner( form.pageowner  );
          Page.setaccesslevel(trim(form.accesslevel));
          Page.seteditlevel(trim(form.editlevel));
          Page.setapprovelevel(trim(form.approvelevel));
@@ -75,7 +77,7 @@ Revision history:
    </cfscript>
    <cfif isdate(form.embargodate) ><cfset Page.setembargodate(trim(form.embargodate)) ></cfif>
    <cfif isdate(form.dateexpires) ><cfset Page.setdateexpires(trim(form.dateexpires)) ></cfif>
-      
+
    <cfset Page.validate(errorhandler) />   
 	<cfif NOT(errorhandler.haserrors())>
 		<cfset TreeLibrary.save(Page) />

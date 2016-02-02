@@ -40,7 +40,7 @@ null="#(NOT len( Page.getpageid() ))#"
 
 <cffunction name="InitLog" access="public" output="false" returntype="any" hint="Initialise the Log Object">
     <cfscript>
-	 var Log = 	variables.Log;
+	 var Log = 	variables.Log.init();
 	 log.setSiteID(  variables.userservice.getUSer().getSiteID() );
 	 Log.setUserID(  variables.userservice.getUser().getUserID() );
 	</cfscript>
@@ -52,7 +52,7 @@ null="#(NOT len( Page.getpageid() ))#"
 <cffunction name="save" access="public" returntype="Page" output="false" hint="DAO method">
 <cfargument name="Page" type="Page" required="yes" />
 <!-----[  If a PageID exists in the arguments, its an update. Run the update method, otherwise run create.  ]----->
-<cfif (arguments.Page.getPageID() neq "0")>
+   <cfif (arguments.Page.getPageID() neq "0")>
 		<!----[  Get existing page details and put them into the archive page object for archiving.  ]----MK ---->	
         <cfset variables.PageArchive.setPageID(  arguments.Page.getPageID()   ) />
         <cfset read( variables.PageArchive ) />  
@@ -133,7 +133,7 @@ null="#(NOT len( Page.getpageid() ))#"
 	<cfset var QPagesselect = "" />
 	<cfquery name="QPagesselect" datasource="#variables.dsn#">
 		SELECT 
-		PageID, PageName, noderec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
+		PageID, PageName, noderec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, AddedBy, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
 		FROM Pages 
 		WHERE 
 		IsVisible = '1' AND
@@ -141,7 +141,7 @@ null="#(NOT len( Page.getpageid() ))#"
 	</cfquery>
 	<cfif QPagesselect.recordCount >
 		<cfscript>
-		Page.setPageID(QPagesselect.PageID);
+		 Page.setPageID(QPagesselect.PageID);
          Page.setPageName(QPagesselect.PageName);
          Page.setNodeRec(QPagesselect.NodeRec);
          Page.setSiteno(QPagesselect.Siteno);
@@ -162,6 +162,7 @@ null="#(NOT len( Page.getpageid() ))#"
          Page.setApprovedBy(QPagesselect.ApprovedBy);
          Page.setApprovedDate(QPagesselect.ApprovedDate);
          Page.setDateAdded(QPagesselect.DateAdded);
+		 Page.setAddedBy(QPagesselect.AddedBy);
          Page.setDateUpdated(QPagesselect.DateUpdated);
          Page.setUpdatedBy(QPagesselect.UpdatedBy);
          Page.setIsVisible(QPagesselect.IsVisible);
@@ -170,6 +171,7 @@ null="#(NOT len( Page.getpageid() ))#"
          
 		</cfscript>
 	</cfif>
+    <cfset getOwner(  page  ) />
 	<cfreturn Page />
 </cffunction>
 		
@@ -177,7 +179,7 @@ null="#(NOT len( Page.getpageid() ))#"
 <cffunction name="GetAllPages" access="public" output="false" returntype="query" hint="Returns a query of all Pages in our Database">
 <cfset var QgetallPages = 0 />
 	<cfquery name="QgetallPages" datasource="#variables.dsn#">
-		SELECT PageID, PageName, NodeRec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
+		SELECT PageID, PageName, NodeRec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate,  DateAdded, AddedBy, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
 		FROM Pages 
 		WHERE IsVisible = '1'
         
@@ -193,7 +195,7 @@ null="#(NOT len( Page.getpageid() ))#"
 	 <cfset var SiteNO = arguments.argsSiteNO />   
 	 <cfset var QgetallPages = 0 />
 	<cfquery name="QgetallPages" datasource="#variables.dsn#">
-		SELECT PageID, PageName, NodeRec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
+		SELECT PageID, PageName, NodeRec.ToString() as Noderec, nodeRec.GetLevel() as Level, Siteno, Template, Teaser, Keywords, Live, Embargoed, EmbargoDate, Expires, DateExpires, AccessLevel, EditLevel, ApproveLevel, EditStatus, LockedForEdit, ApprovedBy, ApprovedDate, DateAdded, AddedBy, DateUpdated, UpdatedBy, IsVisible, PageTitle, Version
 		FROM Pages 
 		WHERE IsVisible = '1' AND
         SiteNo = <cfqueryparam value="#SiteNO#" cfsqltype="cf_sql_integer" />
@@ -279,7 +281,9 @@ GO
   ]----MK ---->
   
 <cfquery name="qInsertPage" datasource="#variables.dsn#">
-	EXEC usp_addpage <cfqueryparam value="#Owner#" cfsqltype="cf_sql_integer" />, <cfqueryparam value="#PageName#" cfsqltype="cf_sql_varchar" />
+	EXEC usp_addpage 
+    <cfqueryparam value="#Owner#" cfsqltype="cf_sql_integer" />, 
+    <cfqueryparam value="#PageName#" cfsqltype="cf_sql_varchar" />
 </cfquery>
 <!----[  Returns the pageid, so set the pageid in the page object.  ]----MK ---->
 
@@ -369,7 +373,7 @@ GO
 </cffunction>
 
 
-<cffunction name="archiveOldPage" access="public" returntype="Page" output="no" hint="Archives the old version of a page into the PageArchive table">
+<cffunction name="archiveOldPage" access="public" returntype="any" output="no" hint="Archives the old version of a page into the PageArchive table">
    <cfargument name="argsPage" required="yes" type="Page" >
    <cfset var PageAchive = arguments.argsPage />
    <cfset var qPageAchiveInsert = 0 />
@@ -398,7 +402,7 @@ GO
 		<cfqueryparam value="#PageAchive.geteditstatus()#" cfsqltype="CF_SQL_VARCHAR" />,
 		<cfqueryparam value="#PageAchive.getlockedforedit()#" cfsqltype="CF_SQL_VARCHAR" />,
 		<cfqueryparam value="#PageAchive.getapprovedby()#" cfsqltype="CF_SQL_VARCHAR" />,
-		<cfqueryparam value="#PageAchive.getapproveddate()#" cfsqltype="CF_SQL_TIMESTAMP" />,
+		<cfqueryparam value="#PageAchive.getapproveddate()#" cfsqltype="CF_SQL_TIMESTAMP"  null="#(NOT len( PageAchive.getApprovedDate() ))#" />,
 		<cfqueryparam value="#PageAchive.getDateAdded()#" cfsqltype="CF_SQL_TIMESTAMP" />,
 		<cfqueryparam value="#PageAchive.getDateUpdated()#" cfsqltype="CF_SQL_TIMESTAMP" />,
 		<cfqueryparam value="#PageAchive.getUpdatedby()#" cfsqltype="CF_SQL_VARCHAR"/> ,
@@ -432,7 +436,11 @@ Funtions to alter information about the page tree
         </cfscript>
 		
         <cfquery name="qPage" datasource="#variables.dsn#">
-        exec usp_MovePageTo <cfqueryparam value="#NewOwnerID#" cfsqltype="cf_sql_integer"/>,<cfqueryparam value="#NewLeftID#" cfsqltype="cf_sql_integer" />,<cfqueryparam value="#newRightID#" cfsqltype="cf_sql_integer" />,<cfqueryparam value="#Page.getPageid()#" cfsqltype="cf_sql_integer" />
+                exec usp_MovePageTo 
+                <cfqueryparam value="#NewOwnerID#" cfsqltype="cf_sql_integer" />,
+                <cfqueryparam value="#NewLeftID#" cfsqltype="cf_sql_integer" null="#(NOT len( NewLeftID ))#" />,
+                <cfqueryparam value="#newRightID#" cfsqltype="cf_sql_integer" null="#(NOT len( newRightID ))#"/>,
+                <cfqueryparam value="#Page.getPageid()#" cfsqltype="cf_sql_integer" />
 \        </cfquery>
         
         <cfset read(page) />

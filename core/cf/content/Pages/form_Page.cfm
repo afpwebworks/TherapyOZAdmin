@@ -21,6 +21,8 @@ Revision history:
 <cfoutput>
 <div class="content">
 <legend>#request.pagename#</legend>
+
+<cfdump var="#page.getsnapshot()#" />
 <form name="Pagesform" id="Pagesform" class="form-horizontal" role="form" action="#cgi.SCRIPT_NAME#" method="post" >
   <cfif (isdefined("errorhandler") AND  (errorhandler.haserrors()))>
     <div class="alert alert-danger alert-white rounded">
@@ -54,17 +56,14 @@ Revision history:
     </select>
   </div>
   
-  <cfif action eq "addpage">
-<!----[    <cfdump var="#sitepages#">  ]----MK ---->
-<div class="form-group">
-  	<label for="pageowner">Owner of this new page</label>
+ <div class="form-group">
+  	<label for="pageowner">Owner of this page</label>
   	<select name="pageowner" id="pageowner" class="form-control">
     	<cfloop query="SitePages">
-        	<option value="#sitepages.pageid#" >#repeatstring('&nbsp;..&nbsp;', (level-1))##SitePages.PageTitle#</option>
+        	<option value="#sitepages.pageid#" <cfif sitepages.pageid eq page.getowner()>selected="selected" </cfif>>#repeatstring('&nbsp;..&nbsp;', (level-1))##SitePages.PageTitle#</option>
         </cfloop>
     </select>
   </div> 
-  </cfif>
   
   <div class="form-group">
     <label for="PageTitle">Page Title</label>
