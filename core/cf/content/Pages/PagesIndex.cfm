@@ -29,7 +29,7 @@ SitePages = application.beanfactory.getbean("Treelibrary").GetPagesForSite( sess
 <table class="table table-striped table-bordered table-hover dataTables-example">
 <thead>
 <tr>
-<th>PageID</th>
+<th>PageID / Version</th>
 <th>PageName</th>
 <th>Action to take</th>
 <th>Delete</th>
@@ -38,7 +38,7 @@ SitePages = application.beanfactory.getbean("Treelibrary").GetPagesForSite( sess
 <tbody>
 <cfloop query="sitepages">
 <tr>
-<td>#SitePages.PageID#</td>
+<td>#SitePages.PageID# / #sitepages.version#</td>
 <td>#repeatstring('&nbsp;..&nbsp;', (level-1))##SitePages.PageTitle#</td>
 <td>
 <cfif len(sitepages.LockedForEdit) GT '2'>
