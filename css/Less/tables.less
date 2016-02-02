@@ -1,0 +1,186 @@
+/* .
+==========================================================================================================
+Filename:     tables.less
+Description:  Tables selectors for styles
+Client:       TherapyOZ Admin site.   CSS
+Date:         27/1/2016
+Author:       Michael Kear, AFP Webworks
+
+Revision history: 
+
+==========================================================================================================
+*/
+.table-bordered {
+  border: 0.0625rem solid #EBEBEB;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+  background-color: @tableBG;
+  border-bottom-width: 0.0625rem;
+ }
+ 
+ .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+  border: 0.0625rem solid @table-border;
+}
+
+.table > thead > tr > th {
+  border-bottom: 0.0625rem solid @vdark-gray ;
+  vertical-align: bottom;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  border-top: 0.0625rem solid @border-color;
+  line-height: 1.42857;
+  padding: 0.5rem;
+  vertical-align: top;
+}
+
+/*
+EMAIL/MESSAGE TABLES
+*/
+
+
+table.table-mail tr td {
+  padding: 0.75rem;
+}
+
+.table-mail .check-mail {
+  padding-left: 1.25rem;
+}
+
+
+.table-mail .mail-date {
+  padding-right: 1.25rem;
+}
+
+
+.star-mail, .check-mail {
+  width: 2.5rem;
+}
+
+.unread td a, .unread td {
+  font-weight: 600;
+  color: inherit;
+}
+
+.read td a, .read td {
+  font-weight: normal;
+  color: inherit;
+}
+.unread td {
+  background-color: @light-gray;
+}
+
+.ibox-content {
+  clear: both;
+}
+
+.ibox-heading {
+  background-color: @gray;
+  border-bottom: none;
+}
+
+.ibox-heading h3 {
+  font-weight: 200;
+  font-size: 1.5rem;
+}
+
+.ibox-title h5 {
+  display: inline-block;
+  font-size: 0.875rem;
+  margin: 0 0 0.4375rem;
+  padding: 0;
+  text-overflow: ellipsis;
+  float: left;
+}
+
+.ibox-title .label {
+  float: left;
+  margin-left: 0.25rem;
+}
+.ibox-tools {
+  display: block;
+  float: none;
+  margin-top: 0;
+  position: relative;
+  padding: 0;
+  text-align: right;
+}
+
+.ibox-tools a {
+   cursor: pointer;
+   margin-left: 0.3125rem;
+   color: @gray;
+}
+
+.ibox-tools a.btn-primary {
+  color: @white;
+}
+
+.ibox-tools .dropdown-menu > li > a {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+}
+
+.ibox .ibox-tools.open > .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+
+/*
+DATA TABLES
+*/
+
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc,
+table.dataTable thead .sorting_asc_disabled,
+table.dataTable thead .sorting_desc_disabled {
+  background: transparent;
+}
+
+.dataTables_wrapper {
+  padding-bottom: 1.875rem;
+}
+
+.dataTables_length {
+  float: left;
+}
+
+body.DTTT_Print {
+  background: @white;
+
+}
+.DTTT_Print #page-wrapper {
+  margin: 0;
+  background:@white;
+}
+
+button.DTTT_button, div.DTTT_button, a.DTTT_button {
+  border: 0.0625rem solid @light-gray;
+  background: @white;
+  color: @dark-gray;
+  box-shadow: none;
+  padding: 0.375rem 0.5rem;
+}
+button.DTTT_button:hover, div.DTTT_button:hover, a.DTTT_button:hover {
+  border: 0.0625rem solid @gray;
+  background: @white;
+  color: @gray;
+  box-shadow: none;
+  padding: 0.375rem 0.5rem;
+}
+
+button.DTTT_button:hover:not(.DTTT_disabled), div.DTTT_button:hover:not(.DTTT_disabled), a.DTTT_button:hover:not(.DTTT_disabled) {
+  border: 0.0625rem solid @gray;
+  background: @white;
+  box-shadow: none;
+}
+
+.dataTables_filter label {
+  margin-right: 0.3125rem;
+
+}
+
+

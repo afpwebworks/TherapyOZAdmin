@@ -1,0 +1,55 @@
+/* .
+==========================================================================================================
+Filename:     panels.less
+Description:  Panel selectors for styles
+Client:       TherapyOZ Admin site.   CSS
+Date:         27/1/2016
+Author:       Michael Kear, AFP Webworks
+
+Revision history: 
+
+==========================================================================================================
+*/
+.panel.blank-panel {
+  background: none;
+  margin: 0;
+}
+
+.blank-panel .panel-heading {
+  padding-bottom: 0;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background: none;
+  border-color: @vdark-gray @vdark-gray rgba(0, 0, 0, 0);
+  border-bottom: @gray;
+  border-image: none;
+  border-style: solid;
+  border-width: 0.0625rem;
+  color:@dark-gray;
+  cursor: default;
+}
+
+.nav.nav-tabs li {
+  background: none;
+  border: none;
+}
+
+.nav-tabs > li > a {
+  color: @default;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem 0.625rem 1.5625rem;
+}
+
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+  background-color: @light-gray;
+  color: @text-color;
+}
+
+.ui-tab .tab-content {
+  padding: 1.25rem 0rem;
+}

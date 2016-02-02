@@ -1,0 +1,247 @@
+/* .
+==========================================================================================================
+Filename:     forms.less
+Description:  Forms definitions for CMS
+Client:       TherapyOZ Admin site.   CSS
+Date:         27/1/2016
+Author:       Michael Kear, AFP Webworks
+
+Revision history: 
+
+==========================================================================================================
+*/
+  /*  
+  TOGGLE SWITCH
+  */
+  
+  .onoffswitch {
+  position: relative;
+  width: 4rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.onoffswitch-checkbox {
+  display: none;
+}
+
+.onoffswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0.125rem solid @primary;
+  border-radius: 0.125rem;
+}
+
+.onoffswitch-inner {
+  width: 200%;
+  margin-left: -100%;
+  -moz-transition: margin 0.3s ease-in 0s;
+  -webkit-transition: margin 0.3s ease-in 0s;
+  -o-transition: margin 0.3s ease-in 0s;
+  transition: margin 0.3s ease-in 0s;
+}
+
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+  float: left;
+  width: 50%;
+  height: 1.25rem;
+  padding: 0;
+  line-height: 1.25rem;
+  font-size: 0.75rem;
+  color: @white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.onoffswitch-inner:before {
+  content: "ON";
+  padding-left: 0.625rem;
+  background-color: @primary;
+  color: @white;
+}
+
+.onoffswitch-inner:after {
+  content: "OFF";
+  padding-right: 0.625rem;
+  background-color: @white;
+  color: #999999;
+  text-align: right;
+}
+
+.onoffswitch-switch {
+  width: 1.25rem;
+  margin: 0;
+  background: @white;
+  border: 0.125rem solid @primary;
+  border-radius: 0.125rem;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 2.75rem;
+  -moz-transition: all 0.3s ease-in 0s;
+  -webkit-transition: all 0.3s ease-in 0s;
+  -o-transition: all 0.3s ease-in 0s;
+  transition: all 0.3s ease-in 0s;
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+  margin-left: 0;
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+  right: 0;
+}
+
+
+/* INPUTS */
+label {
+	margin-top: 3.875rem;
+	font-weight: bold;
+}
+
+.inline {
+  display: inline-block !important;
+}
+
+.input-s-sm {
+  width: 7.5rem;
+}
+
+.input-s {
+  width: 12.5rem;
+}
+
+.input-s-lg {
+  width: 15.625rem;
+}
+
+.i-checks {
+  padding-left: 0;
+}
+
+.form-control, .single-line {
+  background-color: @white;
+  background-image: none;
+  border: 1px solid @gray;
+  border-radius: 0.0625rem;
+  color: inherit;
+  display: block;
+  padding: 0.375rem 0.75rem;
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+  width: 100%;
+  font-size:0.875rem
+}
+
+.form-control:focus, .single-line:focus {
+  border-color: @primary !important;
+}
+
+.has-success .form-control {
+  border-color: @primary;
+}
+
+.has-warning .form-control {
+  border-color: @warning;
+}
+
+.has-error .form-control {
+  border-color: @danger;
+}
+
+.has-success .control-label {
+  color: @primary;
+}
+
+.has-warning .control-label {
+  color: @warning;
+}
+
+.has-error .control-label {
+  color: @danger;
+}
+
+
+.input-group-addon {
+  background-color: @white;
+  border: 0.0625rem solid @dark-gray;
+  border-radius: 0.0625rem;
+  color: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1;
+  padding: 0.375rem 0.75rem;
+  text-align: center;
+}
+
+.spinner-buttons.input-group-btn .btn-xs {
+  line-height: 1.13;
+}
+
+.spinner-buttons.input-group-btn {
+  width: 20%;
+}
+
+.noUi-connect {
+  background: none repeat scroll 0 0 @primary;
+  box-shadow: none;
+}
+
+.slider_red .noUi-connect {
+  background: none repeat scroll 0 0 @danger;
+  box-shadow: none;
+}
+
+
+/* SWITCHES */
+.onoffswitch {
+  position: relative; width: 3.375rem;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+  display: none;
+}
+.onoffswitch-label {
+  display: block; overflow: hidden; cursor: pointer;
+  border: 0.125rem solid @primary; border-radius: 0.1875rem;
+}
+.onoffswitch-inner {
+  display: block; width: 200%; margin-left: -100%;
+  -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+  -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+  display: block; float: left; width: 50%; height: 1rem; padding: 0; line-height: 1rem;
+  font-size: 0.625rem; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+  content: "ON";
+  padding-left: 0.4375rem;
+  background-color: @primary; color: @white;
+}
+.onoffswitch-inner:after {
+  content: "OFF";
+  padding-right: 0.4375rem;
+  background-color: @white; color: @dark-gray;
+  text-align: right;
+}
+.onoffswitch-switch {
+  display: block; width: 18px; margin: 0px;
+  background: @white;
+  border: 0.125rem solid @primary; border-radius: 0.1875rem;
+  position: absolute; top: 0; bottom: 0; right: 2.25rem;
+  -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+  -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+  margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+  right: 0;
+}
+

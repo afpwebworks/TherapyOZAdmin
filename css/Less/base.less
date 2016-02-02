@@ -1,0 +1,386 @@
+/* .
+==========================================================================================================
+Filename:     base.less
+Description:  Basic layout file for CMS
+Client:       TherapyOZ Admin site.   CSS
+Date:         27/1/2016
+Author:       Michael Kear, AFP Webworks
+
+Revision history: 
+
+==========================================================================================================
+*/
+html,body {
+  height: 100%;
+
+}
+
+body.full-height-layout #wrapper,
+body.full-height-layout #page-wrapper {
+  height: 100%;
+}
+
+#page-wrapper {
+  min-height: auto;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+
+
+body.boxed-layout #wrapper {
+  background-color: @wrapper; // #2f4050
+  max-width: @boxed-width;
+  margin: 0 auto;
+  -webkit-box-shadow: 0 0 0.3125rem 0 rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 0.3125rem 0 rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 0.3125rem 0 rgba(0, 0, 0, 0.75);
+}
+
+
+.top-navigation.boxed-layout #wrapper,
+.boxed-layout #wrapper.top-navigation {
+  max-width: 81.25rem !important;
+}
+
+.block {
+  display: block;
+}
+
+.clear {
+  display: block;
+  overflow: hidden;
+}
+
+a {
+  cursor: pointer;
+}
+
+a:hover, a:focus {
+  text-decoration: none;
+}
+
+.border-bottom {
+  border-bottom: 0.0625rem solid @border-color !important;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+
+.b-r {
+  border-right: 0.0625rem solid @border-color;
+}
+
+.hr-line-dashed {
+  border-top: 0.0625rem dashed @border-color;
+  color: #ffffff;
+  background-color: #ffffff;
+  height: 0.0625rem;
+  margin: 1.25rem 0;
+}
+
+.hr-line-solid {
+  border-bottom: 0.0625rem solid @border-color;
+  background-color: rgba(0, 0, 0, 0);
+  border-style: solid !important;
+  margin-top: 0.9375rem;
+  margin-bottom: 0.9375rem;
+}
+
+
+/* WRAPPERS */
+
+#wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.wrapper {
+  padding: 0 1.25rem;
+}
+
+.wrapper-content {
+  padding: 1.25rem 0.625rem 2.5rem;
+}
+
+#page-wrapper {
+  padding: 0 0.9375rem;
+  min-height: 35.5rem;
+  position: relative !important;
+}
+
+@media (min-width: 48rem) {
+  #page-wrapper {
+    position: inherit;
+    margin: 0 0 0 15rem;
+    min-height: 62.5rem;
+  }
+}
+
+.ibox-content h1, .ibox-content h2, .ibox-content h3, .ibox-content h4, .ibox-content h5,
+.ibox-title h1, .ibox-title h2, .ibox-title h3, .ibox-title h4, .ibox-title h5 {
+  margin-top: 0.3125rem;
+}
+
+
+/* FOOTER */
+
+.footer {
+
+  background: none repeat scroll 0 0 white;
+  border-top: 0.0625rem solid @border-color;
+  bottom: 0;
+  left: 0;
+  padding: 0.625rem 1.25rem;
+  position: absolute;
+  right: 0;
+}
+
+.footer.fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding:0.625rem 1.25rem;
+  background: white;
+  border-top: 0.0625rem solid @border-color;
+  // margin-left: @sidebar-width;
+}
+
+
+/* PANELS */
+
+.page-heading {
+  border-top: 0;
+  padding: 0rem 0.625rem 1.25rem 0.625rem;
+}
+
+.panel-heading h1, .panel-heading h2 {
+  margin-bottom: 0.3125rem;
+}
+
+
+/* GLOBAL  */
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.no-borders {
+  border: none !important;
+}
+
+.no-margins {
+  margin: 0 !important;
+}
+
+.no-top-border {
+  border-top: 0 !important;
+}
+
+.ibox-content.text-box {
+  padding-bottom: 0rem;
+  padding-top: 0.9375rem;
+}
+
+.border-left-right {
+  border-left: 0.0625rem solid @border-color;
+  border-right: 0.0625rem solid @border-color;
+  border-top: none;
+  border-bottom: none;
+}
+
+.border-left{
+  border-left: 0.0625rem solid @border-color;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+.border-right {
+  border-left: none;
+  border-right: 0.0625rem solid @border-color;
+  border-top: none;
+  border-bottom: none;
+}
+
+.full-width {
+  width: 100% !important;
+}
+
+.link-block {
+  font-size: 0.75rem;
+  padding: 0.625rem;
+}
+
+.nav.navbar-top-links .link-block a {
+  font-size: 0.75rem;
+}
+
+.link-block a {
+  font-size: 0.625rem;
+  color: inherit;
+
+}
+
+/*
+IBOX SELECTORS
+*/
+
+
+.ibox {
+  clear: both;
+  margin-bottom: 1.5625rem;
+  margin-top: 0;
+  padding: 0;
+}
+
+.ibox.collapsed .ibox-content{
+  display: none;
+}
+.ibox.collapsed .fa.fa-chevron-up:before {
+  content: "\f078";
+}
+.ibox.collapsed .fa.fa-chevron-down:before {
+  content: "\f077";
+}
+
+.ibox:after, .ibox:before {
+  display: table;
+}
+
+.ibox-title {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background-color: @ibox-title-bg;
+  border-color: @border-color;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 0.1875rem 0 0;
+  color: inherit;
+  margin-bottom: 0;
+  padding: 0.875rem 0.9375rem 0.4375rem;
+  min-height: 3rem;
+}
+
+.ibox-content {
+  background-color: @ibox-content-bg;
+  color: inherit;
+  padding: 0.9375rem 1.25rem 1.25rem 1.25rem;
+  border-color: @border-color;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 1px 0px;
+}
+
+.ibox-footer {
+  color: inherit;
+  border-top: 0.0625rem solid @border-color;
+  font-size: 90%;
+  background: @white;
+  padding: 0.625rem 0.9375rem;
+}
+
+
+.simple_tag {
+  background-color: @gray;
+  border: 1px solid @dark-gray;
+  border-radius: 0.125rem;
+  color: inherit;
+  font-size: 0.625rem;
+  margin-right: 0.3125rem;
+  margin-top: 0.3125rem;
+  padding: 0.3125rem 0.75rem;
+  display: inline-block;
+}
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #333333;
+  background-color: #f5f5f5;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+pre code {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border-radius: 0;
+}
+.pre-scrollable {
+  max-height: 340px;
+  overflow-y: scroll;
+}
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pull-right {
+  float: right !important;
+}
+.pull-left {
+  float: left !important;
+}
+.hide {
+  display: none !important;
+}
+.show {
+  display: block !important;
+}
+.invisible {
+  visibility: hidden;
+}
+.text-hide {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.hidden {
+  display: none !important;
+}
+.affix {
+  position: fixed;
+}
+

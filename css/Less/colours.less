@@ -1,0 +1,196 @@
+/* .
+==========================================================================================================
+Filename:     colours.less
+Description:  Colours for base styles
+Client:       TherapyOZ Admin site.   CSS
+Date:         27/1/2016
+Author:       Michael Kear, AFP Webworks
+
+Revision history: 
+
+==========================================================================================================
+*/
+
+@mainHighlight: #1ab394;  //Primary highlighter
+@text-color: #494646;     // body text
+@dark-gray: #c2c2c2;      // Default color
+@light-gray: #e7e7e7;    
+@vdark-gray: darken(@dark-gray, 15%);
+@gray : lighten(@dark-gray, 10%);
+@white:  #FFFFFF;
+@blue: #1c84c6;           // Success color
+@navy: #1ab394;           // Primary color
+@yellow: #f8ac59;         // Warrning color
+@lazur: #23c6c8;          // Info color
+@red: #ED5565;            // Danger color
+
+@wrapper: #2f4050;
+@tooltip: #2F4050;
+
+
+// Button colors
+@primary: @mainHighlight;  // primary color
+@default : @dark-gray ;    // default color 
+@success: @navy;         // Success color
+@info:  @lazur;          // Info color
+@warning: @yellow;       // Warrning color
+@danger: @red;           // Danger color
+
+// IBOX colors ( default panel colors)
+@border-color: #e7eaec;     // IBox border
+@ibox-title-bg:#ffffff;     // IBox Background header
+@ibox-content-bg:#ffffff;   // IBox Background content
+
+//Navigation
+@nav-bg: #2F4050;
+@nav-profil-pattern: url("patterns/header-profile.png") no-repeat;
+@nav-text-color: #a7b1c2;
+
+//tables
+@tableBG:  lighten(@mainHighlight, 10%); 
+@table-border: darken(@mainHighlight, 10%) ;
+
+/*
+BACKGROUNDS 
+*/
+
+.gray-bg {
+  background-color: @gray;
+}
+
+.white-bg {
+  background-color: @white;
+}
+
+.navy-bg {
+  background-color: @navy;
+  color:@white;
+}
+
+.blue-bg {
+  background-color: @blue;
+  color: @white;
+}
+
+.lazur-bg {
+  background-color: @lazur;
+  color: @white;
+}
+
+.yellow-bg {
+  background-color: @yellow;
+  color: @white;
+}
+
+.red-bg {
+  background-color: @red;
+  color: @white;
+}
+
+.black-bg {
+  background-color: @text-color;
+}
+
+.panel-primary {
+  border-color: @navy;
+}
+
+.panel-primary > .panel-heading {
+  background-color: @navy;
+  border-color: @navy;
+}
+
+.panel-success {
+  border-color: @blue;
+}
+
+.panel-success > .panel-heading {
+  background-color: @blue;
+  border-color: @blue;
+  color: @white;
+}
+
+.panel-info {
+  border-color: @lazur;
+}
+
+.panel-info > .panel-heading {
+  background-color: @lazur;
+  border-color: @lazur;
+  color: @white;
+}
+
+.panel-warning {
+  border-color: @yellow;
+}
+
+.panel-warning > .panel-heading {
+  background-color: @yellow;
+  border-color: @yellow;
+  color: @white;
+}
+
+.panel-danger {
+  border-color: @red;
+}
+
+.panel-danger > .panel-heading {
+  background-color: @red;
+  border-color: @red;
+  color: @white;
+}
+
+.progress-bar {
+  background-color: @navy;
+}
+
+
+.panel-title {
+  font-size: inherit;
+}
+
+.jumbotron {
+  border-radius: 6px;
+  padding: 40px;
+}
+
+.jumbotron h1 {
+  margin-top: 0;
+}
+
+/*
+COLOR ALIASES
+*/
+
+.text-navy {
+  color: @navy;
+}
+
+.text-primary {
+  color: inherit;
+}
+
+.text-success {
+  color: @success;
+}
+
+.text-info {
+  color: @info;
+}
+
+.text-warning {
+  color: @warning;
+}
+
+.text-danger {
+  color: @danger;
+}
+
+.text-muted {
+  color: @dark-gray;
+}
+
+.text-white {
+  color: @white;
+}
+
